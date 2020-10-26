@@ -35,8 +35,6 @@ body {
   .article-title {
     color: #444444;
     margin: auto;
-    align-items: center;
-    text-align: center;
   }
   
   a.article-title:hover {
