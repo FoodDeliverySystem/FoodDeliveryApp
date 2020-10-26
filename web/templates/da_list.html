@@ -7,27 +7,23 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-    <div class="content-section">
-      {% if title %}
-          <title>Agent - {{ title }}</title>
-      {% else %}
-          <title>Delivery Agent</title>
-      {% endif %}
-    </div>
+    <title>List of Agents</title>
 </head>
 <body>
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Delivery Agent</a>
+          <a class="navbar-brand mr-4" href="/">Hello Admin</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
         </div>
       </nav>
     </header>
+    <article class="article-title">
+      List of Delivery Agents
+    </article>
     <main role="main" class="container">
       <!-- <div class="row">
         <div class="col-md-4">
@@ -45,10 +41,10 @@
         </div>
       </div> -->
       {% block content %}
-          {% for order in orders %}
+          {% for agent in agents %}
               <article class="media content-section gray">
                 <div class="media-body">
-                  {{ order.id }} <br> {{ order.username }}
+                  {{ agent.id }} &nbsp;&nbsp; {{ agent.username }} &nbsp;&nbsp;<br>Ph.No:&nbsp;&nbsp; {{ agent.phone_no}}
                 </div>
               </article>
           {% endfor %}
