@@ -3,6 +3,7 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from web import app, db, bcrypt
+from web.models import *
 # from web.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
 #                              PostForm, RequestResetForm, ResetPasswordForm)
 # from web.models import User, Post
@@ -13,5 +14,5 @@ from flask_mail import Message
 @app.route("/")
 @app.route("/home")
 def home():
-    orders = DeliveryAgent.query.all()
-    return render_template('da_home.html', orders=orders)
+    agents = DeliveryAgent.query.all()
+    return render_template('da_home.html', orders=agents)

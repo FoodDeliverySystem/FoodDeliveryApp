@@ -3,13 +3,13 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from web import db, login_manager, app
 from flask_login import UserMixin
 
-# @login_manager.user_loader
-# def load_delivery_agent(agent_id):
-#     return DeliveryAgent.query.get(int(agent_id))
+@login_manager.user_loader
+def load_delivery_agent(agent_id):
+    return DeliveryAgent.query.get(int(agent_id))
 
-# @login_manager.user_loader
-# def load_admin(admin_id):
-#     return Admin.query.get(int(admin_id))
+@login_manager.user_loader
+def load_admin(admin_id):
+    return Admin.query.get(int(admin_id))
 
 class DeliveryAgent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
