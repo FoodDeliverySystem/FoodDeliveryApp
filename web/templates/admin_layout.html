@@ -24,19 +24,19 @@
           <div class="collapse navbar-collapse" id="navbarToggle">
             <!-- Navbar Left Side -->
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('da_list') }}">Home</a>
-              <a class="nav-item nav-link" href="{{ url_for('da_list') }}">About</a>
+              <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">Home</a>
+              <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">About</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" href="{{ url_for('da_list') }}">New Order</a>
-                <a class="nav-item nav-link" href="{{ url_for('da_list') }}">New Agent</a>
-                <a class="nav-item nav-link" href="{{ url_for('da_list') }}">Account</a>
-                <a class="nav-item nav-link" href="{{ url_for('da_list') }}">Logout</a>
+                <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">New Order</a>
+                <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">New Agent</a>
+                <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">Account</a>
+                <a class="nav-item nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
               {% else %}
-                <a class="nav-item nav-link" href="{{ url_for('da_list') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('da_list') }}">Register</a>
+                <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">Register</a>
               {% endif %}
             </div>
           </div>
@@ -53,16 +53,16 @@
             <h3>Actions</h3>
             <p class='text-muted'>
               <ul class="list-group">
-                <a href="{{ url_for('da_list') }}" >
+                <a href="{{ url_for('main.da_list') }}" >
                   <li class="list-group-item list-group-item-light">Create Order</li>
                 </a>
-                <a href="{{ url_for('da_list') }}" >
+                <a href="{{ url_for('main.da_list') }}" >
                   <li class="list-group-item list-group-item-light">Open Orders</li>
                 </a>
-                <a href="{{ url_for('da_list') }}" >
+                <a href="{{ url_for('main.da_list') }}" >
                   <li class="list-group-item list-group-item-light">Orders History</li>
                 </a>
-                <a href="{{ url_for('da_list') }}" >
+                <a href="{{ url_for('main.da_list') }}" >
                   <li class="list-group-item list-group-item-light">Delivery Agent List</li>
                 </a>
               </ul>
