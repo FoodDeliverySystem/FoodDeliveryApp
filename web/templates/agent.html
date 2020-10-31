@@ -1,0 +1,44 @@
+{% extends "admin_layout.html" %}
+{% block content %}
+  <article class="article-title" style="text-align:center;">
+    Agent: {{ agent.username }}
+    <br>
+    Status:
+    {% if agent.is_working == True %}
+      Available
+    {% else %}
+      Un-Available
+    {% endif %}
+  </article>
+  <br>
+    <!-- {{ agent.username }}
+    {{ agent.id }} -->
+    <!-- <article class="media content-section gray">
+      <a class="nav-item nav-link" href="{{ url_for('main.agent', agent_id=agent.id) }}">
+        <div class="media-body">
+          {{ agent.id }}
+          &nbsp;&nbsp;&nbsp;&nbsp; {{ agent.username }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ph.No: {{ agent.phone_no}}
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          {% if agent.is_working == True %}
+            Available
+          {% else %}
+            Un-Available
+          {% endif %}
+        </div>
+      </a>
+    </article> -->
+    {% for order in orders %}
+    <article class="media content-section">
+      <a class="nav-item nav-link" href="{{ url_for('main.order', order_id=order.id) }}">
+        <div class="media-body">
+          {{ order.id }}
+          &nbsp;&nbsp;&nbsp;&nbsp; {{ order.order_items }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ order.status}}
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+      </a>
+    </article>
+  {% endfor %}
+
+{% endblock content %}
