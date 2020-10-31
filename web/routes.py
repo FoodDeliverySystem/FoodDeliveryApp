@@ -10,7 +10,3 @@ from web.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
-@app.route("/da_list")
-def da_list():
-    agents = DeliveryAgent.query.all()
-    return render_template('da_list.html', agents=agents)
