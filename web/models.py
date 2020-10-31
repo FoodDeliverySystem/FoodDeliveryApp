@@ -4,14 +4,14 @@ from web import db, login_manager, app
 from flask_login import UserMixin
 
 @login_manager.user_loader
-def load_delivery_agent(agent_id):
-    return DeliveryAgent.query.get(int(agent_id))
+def load_delivery_agent(id):
+    return DeliveryAgent.query.get(int(id))
 
 @login_manager.user_loader
-def load_admin(admin_id):
-    return Admin.query.get(int(admin_id))
+def load_admin(id):
+    return Admin.query.get(int(id))
 
-class DeliveryAgent(db.Model):
+class DeliveryAgent(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -19,17 +19,18 @@ class DeliveryAgent(db.Model):
     password = db.Column(db.String(60), nullable=False)
     is_working = db.Column(db.Boolean, nullable=False, default=True)
     __tablename__ = "delivery_agent"
-    def __repr__(self):
-        return f"DeliveryAgent('{self.id}', '{self.phone_no}', '{self.username}', '{self.email}', '{self.is_working}')"
+    # def __repr__(self):
+    #     return f"DeliveryAgent('{self.id}', '{self.phone_no}', '{self.username}', '{self.email}', '{self.is_working}')"
 
-class Admin(db.Model):
-    username = db.Column(db.String(20), unique=True, nullable=False, primary_key=True)
+class Admin(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     phone_no = db.Column(db.String(15), unique=True, nullable=False)
     __tablename__ = "admin"
-    def __repr__(self):
-        return f"Admin('{self.id}', '{self.phone_no}', '{self.username}', '{self.email}', '{self.is_working}')"
+    # def __repr__(self):
+    #     return f"Admin('{self.id}', '{self.phone_no}', '{self.username}', '{self.email}', '{self.is_working}')"
 
 class Order(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,7 +41,7 @@ class Order(db.Model, UserMixin):
     status = db.Column(db.String(50), nullable=False)
     __tablename__ = "order"
 
-class Customer(db.Model):
+class Customer(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
