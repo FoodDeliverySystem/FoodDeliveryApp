@@ -15,7 +15,7 @@ def da_list():
     agents = DeliveryAgent.query.all()
     return render_template('da_list.html', agents=agents)
 
-@app.route("/da_list")
-def da_list():
-    agents = DeliveryAgent.query.all()
-    return render_template('da_list.html', agents=agents)
+# @app.route("/da_list")
+# def da_list():
+#     agents = DeliveryAgent.query.all()
+#     return render_template('da_list.html', agents=agents)
