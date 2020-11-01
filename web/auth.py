@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template,redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required
-from .models import Admin
+from werkzeug.security import generate_password_hash, check_password_hash
+from .models import *
 from . import db, bcrypt
 
 auth = Blueprint('auth', __name__)
@@ -23,7 +24,31 @@ def login_post():
 
 @auth.route('/signup')
 def signup():
-    return 'Signup'
+    return render_template('signup.html')
+
+@auth.route('/signup', methods=['POST'])
+def signup_post():
+    name = request.form.get('username')
+    email = request.form.get('email')    
+    password = request.form.get('password')
+    confirm_password = request.form.get('confirmpassword')
+    phonenumber = request.form.get('phonenumber')
+
+    if password != confirm_password:
+        flash("Passwords don't match!")
+        return redirect(url_for('auth.login'))
+
+    user = DeliveryAgent.query.filter_by(email=email).first() 
+
+    if user:
+        flash('Email address already exists, please login!')
+        return redirect(url_for('auth.signup'))
+    
+    new_user = DeliveryAgent(username=name, email=email,phone_no=phonenumber,password=bcrypt.generate_password_hash(password).decode('utf-8'), is_working=True)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return redirect(url_for('auth.login'))
 
 @auth.route('/logout')
 @login_required
