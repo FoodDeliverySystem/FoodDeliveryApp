@@ -18,7 +18,7 @@ class DeliveryAgent(db.Model, UserMixin):
     phone_no = db.Column(db.String(15), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     is_working = db.Column(db.Boolean, nullable=False, default=True)
-    __tablename__ = "delivery_agent"
+    __tablename__ = "agent"
     def __repr__(self):
         return f"DeliveryAgent('{self.id}', '{self.phone_no}', '{self.username}', '{self.email}', '{self.is_working}')"
 
@@ -34,7 +34,7 @@ class Admin(db.Model, UserMixin):
 
 class Order(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    agent_id = db.Column(db.Integer, db.ForeignKey('delivery_agent.id'), nullable=False)
+    agent_id = db.Column(db.Integer, db.ForeignKey('agent.id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
     order_items = db.Column(db.String(300), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
