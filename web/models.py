@@ -39,7 +39,7 @@ class Order(db.Model, UserMixin):
     order_items = db.Column(db.String(300), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     status = db.Column(db.String(50), nullable=False)
-    __tablename__ = "order"
+    __tablename__ = "orders"
 
 class Customer(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,0 +1,24 @@
+{% extends "admin_layout.html" %}
+{% block content %}
+  <article class="article-title" style="text-align:center;">
+    Agent {{ agent.username }} 
+    {% if agent.is_working == True %}
+      Available
+    {% else %}
+      Un-Available
+    {% endif %}
+  </article>
+  <br><br><br>
+  Order {{ order.order_items }} 
+  <!-- <article class="media content-section">
+    <a class="nav-item nav-link" href="{{ url_for('main.agent', agent_id=agent.id) }}">
+      <div class="media-body">
+        {{ order.id }}
+        &nbsp;&nbsp;&nbsp;&nbsp; {{ order.order_items }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ order.status}}
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </a>
+  </article> -->
+
+{% endblock content %}

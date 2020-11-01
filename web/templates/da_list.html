@@ -4,18 +4,22 @@
     List of Delivery Agents
   </article>
   <br>
+
   {% for agent in agents %}
-    <article class="media content-section gray">
-      <div class="media-body">
-        {{ agent.id }} &nbsp;&nbsp;&nbsp;&nbsp; {{ agent.username }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ph.No: {{ agent.phone_no}}
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        {% if agent.is_working == True %}
-          Available
-        {% else %}
-          Un-Available
-        {% endif %}
-      </div>
+    <article class="media content-section">
+      <a class="nav-item nav-link" href="{{ url_for('main.agent', agent_id=agent.id) }}">
+        <div class="media-body">
+          {{ agent.id }}
+          &nbsp;&nbsp;&nbsp;&nbsp; {{ agent.username }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ph.No: {{ agent.phone_no}}
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          {% if agent.is_working == True %}
+            Available
+          {% else %}
+            Un-Available
+          {% endif %}
+        </div>
+      </a>
     </article>
   {% endfor %}
 {% endblock content %}

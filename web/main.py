@@ -1,6 +1,6 @@
 from flask import Blueprint
 from . import db
-from .models import *
+from .models import DeliveryAgent, Admin, Customer, Order
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 
@@ -19,3 +19,19 @@ def index():
 def da_list():
     agents = DeliveryAgent.query.all()
     return render_template('da_list.html', agents=agents)
+
+@main.route("/agent/<int:agent_id>")
+@login_required
+def agent(agent_id):
+    agent = DeliveryAgent.query.get_or_404(agent_id)
+    orders = Order.query.filter_by(agent_id=agent_id)
+    return render_template('agent.html', agent=agent, orders=orders)
+
+@main.route("/order/<int:order_id>")
+@login_required
+def order(order_id):
+    order = Order.query.get_or_404(order_id)
+    agent = DeliveryAgent.query.get_or_404(order.agent_id)
+    print('Test')
+    print(agent.id)
+    return render_template('order.html', order=order, agent=agent)
