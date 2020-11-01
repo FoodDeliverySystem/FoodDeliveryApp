@@ -22,21 +22,13 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
-            <!-- Navbar Left Side -->
-            <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">Home</a>
-              <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">About</a>
-            </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">New Order</a>
-                <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">New Agent</a>
-                <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">Account</a>
                 <a class="nav-item nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
               {% else %}
                 <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">Register</a>
+                <!-- <a class="nav-item nav-link" href="{{ url_for('main.da_list') }}">Register</a> -->
               {% endif %}
             </div>
           </div>
