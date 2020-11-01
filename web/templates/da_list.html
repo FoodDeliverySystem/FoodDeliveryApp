@@ -4,22 +4,30 @@
     List of Delivery Agents
   </article>
   <br>
-
   {% for agent in agents %}
-    <article class="media content-section">
+    {% if agent.is_working == True %}
+    {% set status = 'Available' %}
+    {% set badge_type = 'primary' %}
+    {% else %}
+    {% set status = 'Un-Available' %}
+    {% set badge_type = 'danger' %}
+    {% endif %}
+    <div class="container card text-primary">
       <a class="nav-item nav-link" href="{{ url_for('main.agent', agent_id=agent.id) }}">
-        <div class="media-body">
-          {{ agent.id }}
-          &nbsp;&nbsp;&nbsp;&nbsp; {{ agent.username }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ph.No: {{ agent.phone_no}}
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          {% if agent.is_working == True %}
-            Available
-          {% else %}
-            Un-Available
-          {% endif %}
+        <div class="row card-body">
+          <div class="col-sm">
+            {{ agent.username }}
+          </div>
+          <div class="col-sm">
+            {{ agent.phone_no}}
+          </div>
+          <div class="col-sm">
+            <span class="badge badge-{{ badge_type }}">
+              {{ status }}
+            </span>
+          </div>
         </div>
       </a>
-    </article>
+    </div>
   {% endfor %}
 {% endblock content %}

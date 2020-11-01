@@ -1,44 +1,65 @@
 {% extends "admin_layout.html" %}
 {% block content %}
-  <article class="article-title" style="text-align:center;">
+{% if agent.is_working == True %}
+{% set status = 'Available' %}
+{% set badge_type = 'primary' %}
+{% else %}
+{% set status = 'Un-Available' %}
+{% set badge_type = 'danger' %}
+{% endif %}
+
+<div class="container card">
+  <div class="row card-body">
+    <div class="col-sm">
+      Agent: {{ agent.username }}
+    </div>
+    <div class="col-sm">
+      Phone: {{ agent.phone_no }}
+    </div>
+    <div class="col-sm">
+      <span class="badge badge-{{ badge_type }}">{{ status }}</span>
+    </div>
+  </div>
+  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.da_update_status', agent_id=agent.id) }}">Change Status</a>
+</div>
+
+  <!-- <div class="card bg-white d-block">
+    <div class="card-body text-black">
     Agent: {{ agent.username }}
-    <br>
-    Status:
-    {% if agent.is_working == True %}
-      Available
-    {% else %}
-      Un-Available
-    {% endif %}
-  </article>
+    </div>
+    <div class="card-body text-black">
+      Phone: {{ agent.phone_no }}
+    </div>
+    <span class="badge badge-{{ badge_type }}">{{ status }}</span>
+  </div> -->
   <br>
-    <!-- {{ agent.username }}
-    {{ agent.id }} -->
-    <!-- <article class="media content-section gray">
-      <a class="nav-item nav-link" href="{{ url_for('main.agent', agent_id=agent.id) }}">
-        <div class="media-body">
-          {{ agent.id }}
-          &nbsp;&nbsp;&nbsp;&nbsp; {{ agent.username }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ph.No: {{ agent.phone_no}}
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          {% if agent.is_working == True %}
-            Available
-          {% else %}
-            Un-Available
-          {% endif %}
-        </div>
-      </a>
-    </article> -->
-    {% for order in orders %}
-    <article class="media content-section">
-      <a class="nav-item nav-link" href="{{ url_for('main.order', order_id=order.id) }}">
-        <div class="media-body">
-          {{ order.id }}
-          &nbsp;&nbsp;&nbsp;&nbsp; {{ order.order_items }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ order.status}}
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          &nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-      </a>
-    </article>
+  <div class="container card badge badge-secondary">
+    <div class="row card-body">
+      <div class="col-sm">
+        Order ID
+      </div>
+      <div class="col-sm">
+        Order Items
+      </div>
+      <div class="col-sm">
+        Status
+      </div>
+    </div>
+  </div>
+  {% for order in orders %}
+  <div class="container card">
+    <div class="row card-body">
+      <div class="col-sm">
+        {{ order.id }}
+      </div>
+      <div class="col-sm">
+        {{ order.order_items }}
+      </div>
+      <div class="col-sm">
+        <span class="badge badge-dark">{{ order.status }}</span>
+      </div>
+    </div>
+  </div>
   {% endfor %}
 
 {% endblock content %}

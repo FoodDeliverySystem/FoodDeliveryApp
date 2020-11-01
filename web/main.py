@@ -1,7 +1,7 @@
 from flask import Blueprint
 from . import db
 from .models import DeliveryAgent, Admin, Customer, Order
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
 
 main = Blueprint('main', __name__)
@@ -35,3 +35,12 @@ def order(order_id):
     print('Test')
     print(agent.id)
     return render_template('order.html', order=order, agent=agent)
+
+@main.route("/da_update_status/<int:agent_id>")
+@login_required
+def da_update_status(agent_id):
+    agent = DeliveryAgent.query.get_or_404(agent_id)
+    agent.is_working = not agent.is_working
+    db.session.commit()
+    return(redirect(url_for('main.agent', agent_id=agent.id)))
+    #return render_template('', agent=agent)
