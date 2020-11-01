@@ -19,8 +19,8 @@ class DeliveryAgent(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     is_working = db.Column(db.Boolean, nullable=False, default=True)
     __tablename__ = "delivery_agent"
-    # def __repr__(self):
-    #     return f"DeliveryAgent('{self.id}', '{self.phone_no}', '{self.username}', '{self.email}', '{self.is_working}')"
+    def __repr__(self):
+        return f"DeliveryAgent('{self.id}', '{self.phone_no}', '{self.username}', '{self.email}', '{self.is_working}')"
 
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,8 +29,8 @@ class Admin(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     phone_no = db.Column(db.String(15), unique=True, nullable=False)
     __tablename__ = "admin"
-    # def __repr__(self):
-    #     return f"Admin('{self.id}', '{self.phone_no}', '{self.username}', '{self.email}', '{self.is_working}')"
+    def __repr__(self):
+        return f"Admin('{self.id}', '{self.phone_no}', '{self.username}', '{self.email}', '{self.is_working}')"
 
 class Order(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
