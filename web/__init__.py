@@ -4,6 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
+
+from flask_sqlalchemy  import SQLAlchemy
+from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
@@ -11,10 +17,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgres
 app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+
 login_manager = LoginManager(app)
 login_manager.login_view = 'auth.login'
 login_manager.login_message_category = 'info'
 login_manager.init_app(app)
+
+admin = Admin(app, name='Admin', template_mode='bootstrap4')
+
+
 
 # blueprint for auth routes in our app
 from .auth import auth as auth_blueprint
@@ -24,4 +35,12 @@ app.register_blueprint(auth_blueprint)
 from .main import main as main_blueprint
 app.register_blueprint(main_blueprint)
 
-from web import routes
+from .models import *
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Role, db.session))
+admin.add_view(ModelView(UserRoles, db.session))
+admin.add_view(ModelView(Order, db.session))
+admin.add_view(ModelView(Customer, db.session))
+
+db_adapter = SQLAlchemyAdapter(db,  User)
+user_manager = UserManager(db_adapter, app)
