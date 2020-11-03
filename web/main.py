@@ -27,14 +27,14 @@ def da_list():
 @login_required
 def agent(agent_id):
     agent = User.query.get_or_404(agent_id)
-    orders = Order.query.filter_by(agent_id=agent_id)
+    orders = Order.query.filter_by(user_id=agent_id)
     return render_template('agent.html', agent=agent, orders=orders)
 
 @main.route("/order/<int:order_id>")
 @login_required
 def order(order_id):
     order = Order.query.get_or_404(order_id)
-    agent = User.query.get_or_404(order.agent_id)
+    agent = User.query.get_or_404(order.user_id)
     print('Test')
     print(agent.id)
     return render_template('order.html', order=order, agent=agent)
