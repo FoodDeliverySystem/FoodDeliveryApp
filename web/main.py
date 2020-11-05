@@ -4,6 +4,7 @@ from .models import *
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
 from flask_user import roles_required
+from .forms import *
 
 
 main = Blueprint('main', __name__)
@@ -45,5 +46,15 @@ def da_update_status(agent_id):
     agent = User.query.get_or_404(agent_id)
     agent.is_working = not agent.is_working
     db.session.commit()
-    return(redirect(url_for('main.agent', agent_id=agent.id)))
+    return (redirect(url_for('main.agent', agent_id=agent.id)))
     #return render_template('', agent=agent)
+
+@main.route("/da_list/create_order", methods=['GET', 'POST'])
+@login_required
+def create_order():
+    create_order_form = OrderItemsForm()
+    if create_order_form.validate_on_submit(): 
+        new_order = Order(order_items=create_order_form.order_items.data, status=create_order_form.status.data)
+        db.session.add(new_order)
+        db.session.commit()
+    return render_template('create_order.html', form=create_order_form)

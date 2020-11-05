@@ -33,22 +33,25 @@ class UserRoles(db.Model):
     __tablename__ = 'user_roles'
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    user = db.relationship('User')
     role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
+    user = db.relationship('Role')
 
 class Order(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', backref=db.backref('user', lazy='dynamic'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    customer = db.relationship('Customer', backref=db.backref('customer', lazy='dynamic'))
     order_items = db.Column(db.String(300), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     status = db.Column(db.String(50), nullable=False)
     __tablename__ = "orders"
 
+
 class Customer(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
     phone_no = db.Column(db.String(15), unique=True, nullable=False)
     address = db.Column(db.String(120), nullable=False)
     __tablename__ = "customer"

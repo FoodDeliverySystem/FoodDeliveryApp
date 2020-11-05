@@ -22,3 +22,11 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('That email is taken. Please choose a different one.')
+
+class OrderItemsForm(FlaskForm):
+    order_items = TextAreaField('Order Items', validators=[DataRequired()], render_kw={'class': 'form-control', 'rows': 10, 'cols':8})
+    status = StringField('Status of Order', validators=[DataRequired()], default='Order Placed')
+    submit = SubmitField('Add Order')
+
+
+
