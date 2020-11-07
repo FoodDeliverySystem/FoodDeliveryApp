@@ -1,7 +1,7 @@
 from flask import Blueprint
 from . import db
 from .models import *
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 from flask_user import roles_required
 from .forms import *
@@ -57,4 +57,9 @@ def create_order():
         new_order = Order(order_items=create_order_form.order_items.data, status=create_order_form.status.data)
         db.session.add(new_order)
         db.session.commit()
+        flash('Order created successfully!', 'success')
+        return render_template('create_order.html', form=create_order_form)
+    elif create_order_form.validate() == False:
+        print("error")
+        flash('Error in Order Validation!', 'danger')
     return render_template('create_order.html', form=create_order_form)
