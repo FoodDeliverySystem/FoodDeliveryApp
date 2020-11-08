@@ -11,7 +11,10 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    return 'Index'
+    if current_user.is_authenticated:
+        return redirect(url_for('main.da_list'))
+    else:
+        return redirect(url_for('auth.login'))
 
 @main.route("/da_list")
 @roles_required('Admin')
