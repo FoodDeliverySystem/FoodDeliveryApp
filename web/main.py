@@ -52,7 +52,7 @@ def assign_order(order_id, user_id):
     order = Order.query.get_or_404(order_id)
     order.user_id = user_id
     db.session.commit()
-    return (redirect(url_for('main.order')))
+    return (redirect(url_for('main.da_list')))
 
 @main.route("/da_update_status/<int:agent_id>")
 @login_required
