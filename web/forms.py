@@ -1,6 +1,10 @@
 from flask_wtf import FlaskForm
+from flask_bootstrap import Bootstrap
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
+from wtforms import *
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+import phonenumbers
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from web.models import User, OrderStatus
@@ -34,3 +38,4 @@ class OrderItemsForm(FlaskForm):
     cust_addr2 = StringField('Address Line 2', validators=[DataRequired(), Length(min=0, max=65)])
     cust_pincode = StringField('Pin Code', validators=[DataRequired(), Length(min=5, max=12)])
     submit = SubmitField('Add Order')
+
