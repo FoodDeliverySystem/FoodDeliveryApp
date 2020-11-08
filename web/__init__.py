@@ -40,7 +40,6 @@ admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Role, db.session))
 admin.add_view(ModelView(UserRoles, db.session))
 admin.add_view(ModelView(Order, db.session))
-admin.add_view(ModelView(Customer, db.session))
 
 db_adapter = SQLAlchemyAdapter(db,  User)
 user_manager = UserManager(db_adapter, app)
