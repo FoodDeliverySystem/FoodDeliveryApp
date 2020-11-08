@@ -13,10 +13,6 @@ main = Blueprint('main', __name__)
 def index():
     return 'Index'
 
-# @main.route('/profile')
-# def profile():
-#     return 'Profile'
-
 @main.route("/da_list")
 @roles_required('Admin')
 @login_required
@@ -28,7 +24,6 @@ def da_list():
 @login_required
 def agent(agent_id):
     agent = User.query.get_or_404(agent_id)
-    #orders = Order.query.filter(user_id=agent_id and status!=OrderStatus.delivered)
     orders = db.session.query(Order).filter(Order.user_id == agent_id, Order.status != OrderStatus.delivered).all()
     return render_template('agent.html', agent=agent, orders=orders)
 
@@ -39,7 +34,6 @@ def order(order_id):
     agent = User.query.get_or_404(order.user_id)
     return render_template('order.html', order=order, agent=agent)
 
-#href="{{ url_for('main.assign_order', order_id=order.id, agent_id=agent.id) }}
 @main.route("/assign_view/<int:order_id>")
 @login_required
 def assign_view(order_id):
@@ -52,7 +46,7 @@ def assign_order(order_id, user_id):
     order = Order.query.get_or_404(order_id)
     order.user_id = user_id
     db.session.commit()
-    return (redirect(url_for('main.da_list')))
+    return redirect(url_for('main.agent', agent_id=user_id))
 
 @main.route("/da_update_status/<int:agent_id>")
 @login_required
@@ -61,7 +55,6 @@ def da_update_status(agent_id):
     agent.is_working = not agent.is_working
     db.session.commit()
     return (redirect(url_for('main.agent', agent_id=agent.id)))
-    #return render_template('', agent=agent)
 
 @main.route("/da_list/create_order", methods=['GET', 'POST'])
 @login_required
