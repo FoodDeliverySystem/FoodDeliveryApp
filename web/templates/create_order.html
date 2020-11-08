@@ -8,8 +8,28 @@
             {{ form.order_items() }}
         </p>
         <p>
-            {{ form.status.label }}<br>
-            {{ form.status(size=32) }}
+            
+            {{ form.order_status}}
+        </p>
+        <p>    
+            {{ form.cust_name.label }}<br>      
+            {{ form.cust_name() }}
+        </p>
+        <p>    
+            {{ form.cust_phone_no.label }}<br>      
+            {{ form.cust_phone_no() }}
+        </p>
+        <p>    
+            {{ form.cust_addr1.label }}<br>      
+            {{ form.cust_addr1() }}
+        </p>        
+        <p>    
+            {{ form.cust_addr2.label }}<br>      
+            {{ form.cust_addr2() }}
+        </p>        
+        <p>    
+            {{ form.cust_pincode.label }}<br>      
+            {{ form.cust_pincode() }}
         </p>
         <p>{{ form.submit() }}</p>
     </form>
