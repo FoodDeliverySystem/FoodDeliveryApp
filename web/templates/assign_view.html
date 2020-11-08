@@ -1,0 +1,33 @@
+{% extends "admin_layout.html" %}
+{% block content %}
+  <article class="article-title" style="text-align:center;">
+    List of Available Delivery Agents
+  </article>
+  <br>
+  {% for agent in agents %}
+    {% if agent.is_working == True %}
+    {% set status = 'Available' %}
+    {% set badge_type = 'primary' %}
+    {% else %}
+    {% set status = 'Un-Available' %}
+    {% set badge_type = 'danger' %}
+    {% endif %}
+    <div class="container card text-primary">
+      <a class="nav-item nav-link" href="{{ url_for('main.assign_order', order_id=order_id, user_id=agent.id) }}">
+        <div class="row card-body">
+          <div class="col-sm">
+            {{ agent.username }}
+          </div>
+          <div class="col-sm">
+            {{ agent.phone_no }}
+          </div>
+          <div class="col-sm">
+            <span class="badge badge-{{ badge_type }}">
+              #Orders {{ status }}
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+  {% endfor %}
+{% endblock content %}

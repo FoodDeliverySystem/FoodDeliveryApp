@@ -1,13 +1,20 @@
 {% extends "admin_layout.html" %}
 {% block content %}
+  {% set assign_btn_label = 'Assign' %}
   <article class="article-title" style="text-align:center;">
-    Agent {{ agent.username }} 
-    {% if agent.is_working == True %}
-      Available
+    {% if agent %}
+      {% set assign_btn_label = 'Re-Assign' %}
+      Agent {{ agent.username }} 
+      {% if agent.is_working == True %}
+        Available
+      {% else %}
+        Un-Available
+      {% endif %}
     {% else %}
-      Un-Available
+      Order Un-assigned
     {% endif %}
   </article>
+  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.assign_view', order_id=order.id) }}">{{ assign_btn_label }}</a>
   <br><br><br>
   Order {{ order.order_items }} 
   <!-- <article class="media content-section">

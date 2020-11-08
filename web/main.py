@@ -21,14 +21,15 @@ def index():
 @roles_required('Admin')
 @login_required
 def da_list():
-    agents = User.query.all()
+    agents = User.query.order_by(User.id).all()
     return render_template('da_list.html', agents=agents)
 
 @main.route("/agent/<int:agent_id>")
 @login_required
 def agent(agent_id):
     agent = User.query.get_or_404(agent_id)
-    orders = Order.query.filter_by(user_id=agent_id)
+    #orders = Order.query.filter(user_id=agent_id and status!=OrderStatus.delivered)
+    orders = db.session.query(Order).filter(Order.user_id == agent_id, Order.status != OrderStatus.delivered).all()
     return render_template('agent.html', agent=agent, orders=orders)
 
 @main.route("/order/<int:order_id>")
@@ -36,9 +37,22 @@ def agent(agent_id):
 def order(order_id):
     order = Order.query.get_or_404(order_id)
     agent = User.query.get_or_404(order.user_id)
-    print('Test')
-    print(agent.id)
     return render_template('order.html', order=order, agent=agent)
+
+#href="{{ url_for('main.assign_order', order_id=order.id, agent_id=agent.id) }}
+@main.route("/assign_view/<int:order_id>")
+@login_required
+def assign_view(order_id):
+    agents = User.query.filter_by(is_working=True)
+    return render_template('assign_view.html', agents=agents, order_id=order_id)
+
+@main.route("/assign_order/<int:order_id>/<int:user_id>")
+@login_required
+def assign_order(order_id, user_id):
+    order = Order.query.get_or_404(order_id)
+    order.user_id = user_id
+    db.session.commit()
+    return (redirect(url_for('main.order')))
 
 @main.route("/da_update_status/<int:agent_id>")
 @login_required

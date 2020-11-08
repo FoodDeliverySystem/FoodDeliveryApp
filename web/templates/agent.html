@@ -7,7 +7,6 @@
 {% set status = 'Un-Available' %}
 {% set badge_type = 'danger' %}
 {% endif %}
-
 <div class="container card">
   <div class="row card-body">
     <div class="col-sm">
@@ -17,21 +16,15 @@
       Phone: {{ agent.phone_no }}
     </div>
     <div class="col-sm">
+      <span class="badge badge-dark">Orders:{{orders|length}}</span>
+    </div>
+    <div class="col-sm">
       <span class="badge badge-{{ badge_type }}">{{ status }}</span>
     </div>
   </div>
   <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.da_update_status', agent_id=agent.id) }}">Change Status</a>
 </div>
 
-  <!-- <div class="card bg-white d-block">
-    <div class="card-body text-black">
-    Agent: {{ agent.username }}
-    </div>
-    <div class="card-body text-black">
-      Phone: {{ agent.phone_no }}
-    </div>
-    <span class="badge badge-{{ badge_type }}">{{ status }}</span>
-  </div> -->
   <br>
   <div class="container card badge badge-secondary">
     <div class="row card-body">
@@ -48,17 +41,19 @@
   </div>
   {% for order in orders %}
   <div class="container card">
-    <div class="row card-body">
-      <div class="col-sm">
-        {{ order.id }}
+    <a class="nav-item nav-link" href="{{ url_for('main.order', order_id=order.id) }}">
+      <div class="row card-body">
+        <div class="col-sm">
+          {{ order.id }}
+        </div>
+        <div class="col-sm">
+          {{ order.order_items }}
+        </div>
+        <div class="col-sm">
+          <span class="badge badge-dark">{{ order.status }}</span>
+        </div>
       </div>
-      <div class="col-sm">
-        {{ order.order_items }}
-      </div>
-      <div class="col-sm">
-        <span class="badge badge-dark">{{ order.status }}</span>
-      </div>
-    </div>
+    </a>
   </div>
   {% endfor %}
 
