@@ -8,7 +8,6 @@
             {{ form.order_items() }}
         </p>
         <p>
-            {{ form.cust_name.label }}<br>
             <div class="form-group">
                 {{ form.cust_name.label(class="form-control-label") }}
                 {% if form.cust_name.errors %}
@@ -24,7 +23,6 @@
             </div>
         </p>
         <p>
-            {{ form.cust_phone_no.label }}<br>
             <div class="form-group">
                 {{ form.cust_phone_no.label(class="form-control-label") }}
                 {% if form.cust_phone_no.errors %}
@@ -40,7 +38,6 @@
             </div>
         </p>
         <p>
-            {{ form.cust_addr1.label }}<br>
             <div class="form-group">
                 {{ form.cust_addr1.label(class="form-control-label") }}
                 {% if form.cust_addr1.errors %}
@@ -55,7 +52,6 @@
                 {% endif %}
             </div>
             <br>
-            {{ form.cust_addr2.label }}<br>
             <div class="form-group">
                 {{ form.cust_addr2.label(class="form-control-label") }}
                 {% if form.cust_addr2.errors %}
@@ -71,7 +67,6 @@
             </div>
         </p>
         <p>
-            {{ form.cust_pincode.label }}<br>
             <div class="form-group">
                 {{ form.cust_pincode.label(class="form-control-label") }}
                 {% if form.cust_pincode.errors %}
@@ -87,7 +82,6 @@
             </div>
         </p>
         <p>
-            {{ form.status.label }}<br>      
             <div class="form-group">
                 {{ form.status.label(class="form-control-label") }}
                 {% if form.status.errors %}

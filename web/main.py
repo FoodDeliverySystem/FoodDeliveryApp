@@ -34,7 +34,7 @@ def agent(agent_id):
 @login_required
 def order(order_id):
     order = Order.query.get_or_404(order_id)
-    agent = User.query.get_or_404(order.user_id)
+    agent = User.query.get(order.user_id)
     return render_template('order.html', order=order, agent=agent)
 
 @main.route("/assign_view/<int:order_id>")
@@ -59,7 +59,7 @@ def da_update_status(agent_id):
     db.session.commit()
     return (redirect(url_for('main.agent', agent_id=agent.id)))
 
-@main.route("/da_list/create_order", methods=['GET', 'POST'])
+@main.route("/create_order", methods=['GET', 'POST'])
 @login_required
 def create_order():
     create_order_form = OrderItemsForm()
@@ -68,5 +68,5 @@ def create_order():
         db.session.add(new_order)
         db.session.commit()
         flash('Order created successfully!', 'success')
-        return render_template('create_order.html', form=create_order_form)
+        return (redirect(url_for('main.create_order')))
     return render_template('create_order.html', form=create_order_form)
