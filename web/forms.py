@@ -38,3 +38,4 @@ class OrderItemsForm(FlaskForm):
     cust_addr2 = StringField('Address Line 2', validators=[DataRequired(), Length(min=0, max=65)])
     cust_pincode = StringField('Pin Code', validators=[DataRequired(), Length(min=5, max=12)])
     submit = SubmitField('Add Order')
+
