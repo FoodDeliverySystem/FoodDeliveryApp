@@ -9,16 +9,16 @@
 {% endif %}
 <div class="container card">
   <div class="row card-body">
-    <div class="col-sm">
-      Agent: {{ agent.username }}
+    <div class="col">
+      {{ agent.username }}
     </div>
-    <div class="col-sm">
-      Phone: {{ agent.phone_no }}
+    <div class="col">
+      {{ agent.phone_no }}
     </div>
-    <div class="col-sm">
+    <div class="col">
       <span class="badge badge-dark">Orders:{{orders|length}}</span>
     </div>
-    <div class="col-sm">
+    <div class="col">
       <span class="badge badge-{{ badge_type }}">{{ status }}</span>
     </div>
   </div>
@@ -28,13 +28,13 @@
   <br>
   <div class="container card badge badge-secondary">
     <div class="row card-body">
-      <div class="col-sm">
+      <div class="col">
         Order ID
       </div>
-      <div class="col-sm">
+      <div class="col">
         Order Items
       </div>
-      <div class="col-sm">
+      <div class="col">
         Status
       </div>
     </div>
@@ -43,13 +43,13 @@
   <div class="container card">
     <a class="nav-item nav-link" href="{{ url_for('main.order', order_id=order.id) }}">
       <div class="row card-body">
-        <div class="col-sm">
+        <div class="col">
           {{ order.id }}
         </div>
-        <div class="col-sm">
+        <div class="col">
           {{ order.order_items }}
         </div>
-        <div class="col-sm">
+        <div class="col">
           <span class="badge badge-dark">{{ order.status }}</span>
         </div>
       </div>

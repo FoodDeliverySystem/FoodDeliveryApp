@@ -15,13 +15,13 @@
     <div class="container card text-primary">
       <a class="nav-item nav-link" href="{{ url_for('main.assign_order', order_id=order_id, user_id=agent.id) }}">
         <div class="row card-body">
-          <div class="col-sm">
+          <div class="col">
             {{ agent.username }}
           </div>
-          <div class="col-sm">
+          <div class="col">
             {{ agent.phone_no }}
           </div>
-          <div class="col-sm">
+          <div class="col">
             <span class="badge badge-{{ badge_type }}">
               #Orders {{ status }}
             </span>
