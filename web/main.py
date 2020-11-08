@@ -54,7 +54,7 @@ def da_update_status(agent_id):
 def create_order():
     create_order_form = OrderItemsForm()
     if create_order_form.validate_on_submit(): 
-        new_order = Order(order_items=create_order_form.order_items.data, status=create_order_form.status.data)
+        new_order = Order(order_items=create_order_form.order_items.data, status=create_order_form.order_status.data, cust_name=create_order_form.cust_name.data, cust_phone_no=create_order_form.cust_phone_no.data,cust_addr1=create_order_form.cust_addr1.data, cust_addr2=create_order_form.cust_addr2.data,cust_pincode=create_order_form.cust_pincode.data)
         db.session.add(new_order)
         db.session.commit()
     return render_template('create_order.html', form=create_order_form)
