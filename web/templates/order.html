@@ -12,6 +12,34 @@
 {% else %}
 {% set assign_btn_label = 'Assign' %}
 {% endif %}
+<br><br>
+<div class="container card badge badge-secondary">
+  <div class="row card-body">
+    <div class="col-sm">
+      Order ID
+    </div>
+    <div class="col-sm">
+      Order Items
+    </div>
+    <div class="col-sm">
+      Status
+    </div>
+  </div>
+</div>
+<div class="container card">
+  <div class="row card-body">
+    <div class="col-sm">
+      {{ order.id }}
+    </div>
+    <div class="col-sm">
+      {{ order.order_items }}
+    </div>
+    <div class="col-sm">
+      <span class="badge badge-dark">{{ order.status }}</span>
+    </div>
+  </div>
+</div>
+<br><br>
 <div class="container card">
   <a class="nav-item nav-link" href="{{ url_for('main.agent', agent_id=agent.id) }}">
     <div class="row card-body">
@@ -33,30 +61,4 @@
 
 </div>
   <br>
-  <div class="container card badge badge-secondary">
-    <div class="row card-body">
-      <div class="col-sm">
-        Order ID
-      </div>
-      <div class="col-sm">
-        Order Items
-      </div>
-      <div class="col-sm">
-        Status
-      </div>
-    </div>
-  </div>
-  <div class="container card">
-    <div class="row card-body">
-      <div class="col-sm">
-        {{ order.id }}
-      </div>
-      <div class="col-sm">
-        {{ order.order_items }}
-      </div>
-      <div class="col-sm">
-        <span class="badge badge-dark">{{ order.status }}</span>
-      </div>
-    </div>
-  </div>
 {% endblock content %}
