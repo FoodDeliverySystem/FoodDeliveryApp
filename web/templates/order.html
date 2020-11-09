@@ -1,19 +1,12 @@
 {% extends "admin_layout.html" %}
 {% block content %}
-<!-- {% if agent.is_working == True %}
-  {% set status = 'Available' %}
-  {% set badge_type = 'primary' %}
-{% else %}
-  {% set status = 'Un-Available' %}
-  {% set badge_type = 'danger' %}
-{% endif %} -->
 {% if agent %}
 {% set assign_btn_label = 'Re-Assign' %}
 {% else %}
 {% set assign_btn_label = 'Assign' %}
 {% endif %}
 <br><br>
-<div class="container card badge badge-secondary">
+<div class="container card text-left text-white bg-dark">
   <div class="row card-body">
     <div class="col">
       Order ID

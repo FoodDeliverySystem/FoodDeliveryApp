@@ -30,6 +30,18 @@ def agent(agent_id):
     orders = db.session.query(Order).filter(Order.user_id == agent_id, Order.status != OrderStatus.delivered).all()
     return render_template('agent.html', agent=agent, orders=orders)
 
+@main.route("/open_orders_list")
+@login_required
+def open_orders_list():
+    orders = db.session.query(Order).filter(Order.status != OrderStatus.delivered).order_by(Order.id).all()
+    return render_template('orders_list.html', orders=orders, title='List of Open Orders')
+
+@main.route("/delivered_orders_list")
+@login_required
+def delivered_orders_list():
+    orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered).order_by(Order.id).all()
+    return render_template('orders_list.html', orders=orders, title='List of Delivered Orders')
+
 @main.route("/order/<int:order_id>")
 @login_required
 def order(order_id):

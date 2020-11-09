@@ -41,7 +41,7 @@
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 <div class="alert alert-danger" role="alert">
-                   {{messages[0]}}
+                    {{messages[0]}}
                 </div>
                 {%  endif  %}
                 {% endwith %}
@@ -61,16 +61,12 @@
                                 <span class="glyphicon glyphicon-lock"></span>
                                 </span>
                                 <input type="password" class="form-control" placeholder="Password" name="password" id="password"/>
-    
                             </div>
-    
                         </div>
-    
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-success btn-lg">Login</button>
                             <a href="#" class="btn btn-link">Forgot Password</a>
                         </div>
-    
                     </form>
                 </div>
             </div>
