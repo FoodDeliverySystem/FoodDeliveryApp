@@ -71,6 +71,14 @@ def da_update_status(agent_id):
     db.session.commit()
     return (redirect(url_for('main.agent', agent_id=agent.id)))
 
+@main.route("/update_order_status/<int:order_id>/<string:status_option>")
+@login_required
+def update_order_status(order_id, status_option):
+    order = Order.query.get_or_404(order_id)
+    order.status = OrderStatus[status_option]
+    db.session.commit()
+    return (redirect(url_for('main.order', order_id=order.id)))
+
 @main.route("/create_order", methods=['GET', 'POST'])
 @login_required
 def create_order():

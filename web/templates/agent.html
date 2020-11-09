@@ -2,9 +2,11 @@
 {% block content %}
 {% if agent.is_working == True %}
 {% set status = 'Available' %}
+{% set opp_status = 'Un-Available' %}
 {% set badge_type = 'primary' %}
 {% else %}
 {% set status = 'Un-Available' %}
+{% set opp_status = 'Available' %}
 {% set badge_type = 'danger' %}
 {% endif %}
 <div class="container card">
@@ -22,7 +24,7 @@
       <span class="badge badge-{{ badge_type }}">{{ status }}</span>
     </div>
   </div>
-  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.da_update_status', agent_id=agent.id) }}">Change Status</a>
+      <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.da_update_status', agent_id=agent.id) }}">Make {{opp_status}}</a>
 </div>
 
   <br>

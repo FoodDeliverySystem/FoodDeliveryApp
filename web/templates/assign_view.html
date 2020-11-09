@@ -1,9 +1,20 @@
 {% extends "admin_layout.html" %}
 {% block content %}
-  <article class="article-title" style="text-align:center;">
-    List of Available Delivery Agents
-  </article>
   <br>
+  <div class="text-black text-center">
+    List of Available Delivery Agents
+  </div>
+  <br>
+  <div class="container card text-left text-white bg-dark">
+    <div class="row card-body">
+      <div class="col">
+        Agent Name
+      </div>
+      <div class="col">
+        Phone No
+      </div>
+    </div>
+  </div>
   {% for agent in agents %}
     {% if agent.is_working == True %}
     {% set status = 'Available' %}
@@ -20,11 +31,6 @@
           </div>
           <div class="col">
             {{ agent.phone_no }}
-          </div>
-          <div class="col">
-            <span class="badge badge-{{ badge_type }}">
-              #Orders {{ status }}
-            </span>
           </div>
         </div>
       </a>
