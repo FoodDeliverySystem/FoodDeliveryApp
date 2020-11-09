@@ -23,26 +23,26 @@ def da_list():
     agents = User.query.order_by(User.id).all()
     return render_template('da_list.html', agents=agents)
 
-@main.route("/agent/<int:agent_id>")
+@main.route("/agent/<int:agent_id>", methods=['GET'])
 @login_required
 def agent(agent_id):
     agent = User.query.get_or_404(agent_id)
     orders = db.session.query(Order).filter(Order.user_id == agent_id, Order.status != OrderStatus.delivered).all()
     return render_template('agent.html', agent=agent, orders=orders)
 
-@main.route("/open_orders_list")
+@main.route("/open_orders_list", methods=['GET'])
 @login_required
 def open_orders_list():
     orders = db.session.query(Order).filter(Order.status != OrderStatus.delivered).order_by(Order.id).all()
     return render_template('orders_list.html', orders=orders, title='List of Open Orders')
 
-@main.route("/delivered_orders_list")
+@main.route("/delivered_orders_list", methods=['GET'])
 @login_required
 def delivered_orders_list():
     orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered).order_by(Order.id).all()
     return render_template('orders_list.html', orders=orders, title='List of Delivered Orders')
 
-@main.route("/order/<int:order_id>")
+@main.route("/order/<int:order_id>", methods=['GET'])
 @login_required
 def order(order_id):
     order = Order.query.get_or_404(order_id)
@@ -71,7 +71,7 @@ def da_update_status(agent_id):
     db.session.commit()
     return (redirect(url_for('main.agent', agent_id=agent.id)))
 
-@main.route("/update_order_status/<int:order_id>/<string:status_option>")
+@main.route("/update_order_status/<int:order_id>/<string:status_option>", methods=['GET', 'POST'])
 @login_required
 def update_order_status(order_id, status_option):
     order = Order.query.get_or_404(order_id)
