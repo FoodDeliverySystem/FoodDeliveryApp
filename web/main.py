@@ -30,17 +30,36 @@ def agent(agent_id):
     orders = db.session.query(Order).filter(Order.user_id == agent_id, Order.status != OrderStatus.delivered).all()
     return render_template('agent.html', agent=agent, orders=orders)
 
-@main.route("/open_orders_list", methods=['GET'])
+@main.route("/current_orders", methods=['GET'])
 @login_required
-def open_orders_list():
+def current_orders():
     orders = db.session.query(Order).filter(Order.status != OrderStatus.delivered).order_by(Order.id).all()
     return render_template('orders_list.html', orders=orders, title='List of Open Orders')
 
-@main.route("/delivered_orders_list", methods=['GET'])
+@main.route("/delivered_orders", methods=['GET'])
 @login_required
-def delivered_orders_list():
+def delivered_orders():
     orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered).order_by(Order.id).all()
     return render_template('orders_list.html', orders=orders, title='List of Delivered Orders')
+
+@main.route("/unassigned_orders", methods=['GET'])
+@login_required
+def unassigned_orders():
+    orders = db.session.query(Order.cust_pincode).filter(Order.status != OrderStatus.delivered).group_by(Order.cust_pincode).all()
+    return render_template('pincode_list.html', orders=orders, title="Pincodes of open orders")
+
+@main.route("/pin_orders/<string:pin>", methods=['GET'])
+@login_required
+def pin_orders(pin):
+    orders = db.session.query(Order).filter(Order.status != OrderStatus.delivered, Order.cust_pincode == pin).order_by(Order.id).all()
+    title = "Orders in " + pin
+    return render_template('orders_list.html', orders=orders, title=title)
+
+# @main.route("/unassigned_orders", methods=['GET'])
+# @login_required
+# def unassigned_orders():
+#     orders = db.session.query(Order).filter(Order.user_id == None).order_by(Order.id).all()
+#     return render_template('orders_list.html', orders=orders, title='List of Un-assigned Orders')
 
 @main.route("/order/<int:order_id>", methods=['GET'])
 @login_required
