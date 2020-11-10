@@ -45,13 +45,13 @@ def delivered_orders():
 @main.route("/unassigned_orders", methods=['GET'])
 @login_required
 def unassigned_orders():
-    orders = db.session.query(Order.cust_pincode).filter(Order.status != OrderStatus.delivered).group_by(Order.cust_pincode).all()
+    orders = db.session.query(Order.cust_pincode).filter(Order.user_id == None ,Order.status != OrderStatus.delivered).group_by(Order.cust_pincode).all()
     return render_template('pincode_list.html', orders=orders, title="Pincodes of open orders")
 
 @main.route("/pin_orders/<string:pin>", methods=['GET'])
 @login_required
 def pin_orders(pin):
-    orders = db.session.query(Order).filter(Order.status != OrderStatus.delivered, Order.cust_pincode == pin).order_by(Order.id).all()
+    orders = db.session.query(Order).filter(Order.user_id == None, Order.status != OrderStatus.delivered, Order.cust_pincode == pin).order_by(Order.id).all()
     title = "Orders in " + pin
     return render_template('orders_list.html', orders=orders, title=title)
 
