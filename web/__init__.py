@@ -43,4 +43,4 @@ admin.add_view(ModelView(UserRoles, db.session))
 admin.add_view(ModelView(Order, db.session))
 
 db_adapter = SQLAlchemyAdapter(db,  User)
-user_manager = UserManager(db_adapter, app)
+user_manager = UserManager(db_adapter, app, login_view_function=auth.login, logout_view_function=auth.logout)
