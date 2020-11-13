@@ -1,12 +1,10 @@
 {% extends "admin_layout.html" %}
 {% block content %}
     <h1>Create Order</h1>
-    <form action="{{ url_for('main.create_order') }}" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.order_items.label }}<br>
-            {{ form.order_items() }}
-        </p>
+    <form action="/create_order" method="post" novalidate>
+
+        {{ form.csrf_token }}
+
         <p>
             <div class="form-group">
                 {{ form.cust_name.label(class="form-control-label") }}
@@ -24,16 +22,16 @@
         </p>
         <p>
             <div class="form-group">
-                {{ form.cust_phone_no.label(class="form-control-label") }}
-                {% if form.cust_phone_no.errors %}
-                    {{ form.cust_phone_no(class="form-control form-control-lg is-invalid") }}
+                {{ form.phone.label(class="form-control-label") }}
+                {% if form.phone.errors %}
+                    {{ form.phone(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
-                        {% for error in form.cust_phone_no.errors %}
+                        {% for error in form.phone.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ form.cust_phone_no(class="form-control form-control-lg") }}
+                    {{ form.phone(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
         </p>
@@ -81,6 +79,64 @@
             </div>
         </p>
         <p>
+          <div class="form-row align-items-center">
+            <div class="form-group col-md-4">
+              {{ form.delivery_date.label(class="form-control-label") }}
+              {% if form.delivery_date.errors %}
+                  {{ form.delivery_date(class="form-control is-invalid") }}
+                  <div class="invalid-feedback">
+                      {% for error in form.delivery_date.errors %}
+                          <span>{{ error }}</span>
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ form.delivery_date(class="form-control form-control-lg") }}
+              {% endif %}
+            </div>
+            <div class="form-group col-md-4">
+              {{ form.delivery_start_time.label(class="form-control-label") }}
+              {% if form.delivery_start_time.errors %}
+                  {{ form.delivery_start_time(class="form-control is-invalid") }}
+                  <div class="invalid-feedback">
+                      {% for error in form.delivery_start_time.errors %}
+                          <span>{{ error }}</span>
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ form.delivery_start_time(class="form-control form-control-lg") }}
+              {% endif %}
+            </div>
+            <div class="form-group col-md-4">
+              {{ form.delivery_end_time.label(class="form-control-label") }}
+              {% if form.delivery_end_time.errors %}
+                  {{ form.delivery_end_time(class="form-control is-invalid") }}
+                  <div class="invalid-feedback">
+                      {% for error in form.delivery_end_time.errors %}
+                          <span>{{ error }}</span>
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ form.delivery_end_time(class="form-control form-control-lg") }}
+              {% endif %}
+            </div>
+          </div>
+      </p>
+      <p>
+        <div class="form-group">
+            {{ form.delivery_instructions.label(class="form-control-label") }}
+            {% if form.delivery_instructions.errors %}
+                {{ form.delivery_instructions(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.delivery_instructions.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.delivery_instructions(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+    </p>
+        <p>
             <div class="form-group">
                 {{ form.status.label(class="form-control-label") }}
                 {% if form.status.errors %}
@@ -97,5 +153,6 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
+
 
 {% endblock %}
