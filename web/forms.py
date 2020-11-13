@@ -8,6 +8,8 @@ import phonenumbers
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from web.models import User, OrderStatus
+from wtforms.fields.html5 import *
+from datetime import datetime, date
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
@@ -29,13 +31,30 @@ class RegistrationForm(FlaskForm):
 
 class OrderItemsForm(FlaskForm):
     #company = SelectField("Company", choices=Company.choices(), coerce=Company.coerce)
-    order_items = TextAreaField('Order Items', validators=[DataRequired()], render_kw={'class': 'form-control', 'rows': 10, 'cols':8})
+
     #status = StringField('Status of Order', validators=[DataRequired()], default=OrderStatus.accepted.value)
     status = SelectField('Status of Order', choices=OrderStatus.choices())
     cust_name = StringField('Customer Name', validators=[DataRequired(), Length(min=3, max=30)])
-    cust_phone_no = StringField('Customer Phone', validators=[DataRequired(), Length(min=5, max=15)])
-    cust_addr1 = StringField('Address Line 1', validators=[DataRequired(), Length(min=5, max=65)])
-    cust_addr2 = StringField('Address Line 2', validators=[DataRequired(), Length(min=0, max=65)])
+    phone = StringField('Phone', validators=[DataRequired(), Length(10)])
+    cust_addr1 = TextAreaField('Address Line 1', validators=[DataRequired(), Length(min=5, max=65)],  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
+    cust_addr2 = TextAreaField('Address Line 2', validators=[Length(min=0, max=65)],  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
     cust_pincode = StringField('Pin Code', validators=[DataRequired(), Length(min=5, max=12)])
+    delivery_date = DateField('Delivery Date', format='%Y-%m-%d',  validators=[DataRequired()])
+    delivery_start_time = TimeField('Start Time')
+    delivery_end_time = TimeField('End Time')
+    delivery_instructions = TextAreaField('Delivery Instructions',  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
+    order_items = TextAreaField('Order Items', render_kw={'class': 'form-control', 'rows': 5, 'cols':5, 'readonly': True})
     submit = SubmitField('Add Order')
+
+    def validate_phone(form, field):
+        if len(field.data) > 16:
+            raise ValidationError('length should be less than 16')
+        try:
+            input_number = phonenumbers.parse(field.data)
+            if not (phonenumbers.is_valid_number(input_number)):
+                raise ValidationError('Invalid phone number.')
+        except:
+            input_number = phonenumbers.parse("+1"+field.data)
+            if not (phonenumbers.is_valid_number(input_number)):
+                raise ValidationError('failed validating with +1')
 
