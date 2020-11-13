@@ -7,7 +7,7 @@ from flask_mail import Mail
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
-
+from flask_bootstrap import Bootstrap
 from flask_sqlalchemy  import SQLAlchemy
 from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
 
@@ -23,6 +23,8 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'auth.login'
 login_manager.login_message_category = 'info'
 login_manager.init_app(app)
+bootstrap = Bootstrap(app)
+
 
 admin = Admin(app, name='Admin', template_mode='bootstrap4')
 
