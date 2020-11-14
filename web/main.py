@@ -68,6 +68,12 @@ def order(order_id):
     agent = User.query.get(order.user_id)
     return render_template('order.html', order=order, agent=agent)
 
+@main.route("/agent_order_view/<int:order_id>")
+@login_required
+def detailed_order(order_id):
+    order = Order.query.get_or_404(order_id)
+    return render_template('agent_order_view.html', order=order, agent=current_user)
+
 @main.route("/assign_view/<int:order_id>")
 @login_required
 def assign_view(order_id):
@@ -98,6 +104,15 @@ def update_order_status(order_id, status_option):
     db.session.commit()
     return (redirect(url_for('main.order', order_id=order.id)))
 
+@main.route("/update_order_status_agent/<int:order_id>/<string:status_option>", methods=['GET', 'POST'])
+@login_required
+def update_order_status_agent(order_id, status_option):
+    order = Order.query.get_or_404(order_id)
+    order.status = OrderStatus[status_option]
+    db.session.commit()
+    orders = db.session.query(Order).filter(Order.user_id == current_user.id ,Order.status != OrderStatus.delivered).all()
+    return render_template('agent_assigned_orders_view.html', agent=current_user, orders = orders)
+
 @main.route("/create_order", methods=['GET', 'POST'])
 @login_required
 def create_order():
@@ -109,3 +124,10 @@ def create_order():
         flash('Order created successfully!', 'success')
         return (redirect(url_for('main.create_order')))
     return render_template('create_order.html', form=create_order_form)
+
+@main.route("/agent_view")
+@login_required
+def agent_home_page():
+    print(current_user.id)
+    orders = db.session.query(Order).filter(Order.user_id == current_user.id ,Order.status != OrderStatus.delivered).all()
+    return render_template('agent_assigned_orders_view.html', agent=current_user, orders = orders)
