@@ -1,0 +1,110 @@
+{% extends "agent_layout.html" %}
+{% block content %}
+{% if agent %}
+{% set assign_btn_label = 'Re-Assign' %}
+{% else %}
+{% set assign_btn_label = 'Assign' %}
+{% endif %}
+{% if agent.is_working == True %}
+{% set status = 'Available' %}
+{% set badge_type = 'primary' %}
+{% else %}
+{% set status = 'Un-Available' %}
+{% set badge_type = 'danger' %}
+{% endif %}
+<br><br>
+<div class="container">
+  <div class="container card text-left text-white bg-dark">
+    <div class="row card-body">
+      <div class="col">
+        Order ID
+      </div>
+      <div class="col">
+        Pincode
+      </div>
+      <div class="col">
+        Status
+      </div>
+    </div>
+  </div>
+  <div class="container card">
+    <div class="row card-body">
+      <div class="col">
+        {{ order.id }}
+      </div>
+      <div class="col">
+        {{ order.cust_pincode }}
+      </div>
+      <div class="col">
+        <span class="badge badge-dark">{{ order.status }}</span>
+      </div>
+    </div>
+  </div>
+  <br><br>
+  {% if agent %}
+  <div class="container card text-center text-white bg-dark">
+    Assignee
+  </div>
+  <div class="container card">
+    <a class="nav-item nav-link" href="{{ url_for('main.agent', agent_id=agent.id) }}">
+      <div class="row card-body">
+        <div class="col">
+          {{ agent.username }}
+        </div>
+        <div class="col">
+          {{ agent.phone_no }}
+        </div>
+        <div class="col">
+          <span class="badge badge-{{ badge_type }}">{{ status }}</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% else %}
+  <div class="text-black text-center font-weight-bold">
+    This order is currently unassigned.
+  </div>
+  {% endif %}
+  <br><br>
+  <div class="container card text-center">
+    <div class="row card-body">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <a class="btn btn-secondary btn btn-primary" href="{{ url_for('main.assign_view', order_id=order.id) }}">{{ assign_btn_label }} Order</a>
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Update Status
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="{{ url_for('main.update_order_status_agent',order_id=order.id, status_option='accepted') }}">Accepted</a>
+                      <a class="dropdown-item" href="{{ url_for('main.update_order_status_agent',order_id=order.id, status_option='cooking') }}">Preparing your meal</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{{ url_for('main.update_order_status_agent',order_id=order.id, status_option='eta_30') }}">Your Order is 30 Minutes Away</a>
+                      <a class="dropdown-item" href="{{ url_for('main.update_order_status_agent',order_id=order.id, status_option='eta_10') }}">Your Order is 10 Minutes Away</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{{ url_for('main.update_order_status_agent',order_id=order.id, status_option='reached') }}">Your Order has reached your location</a>
+                      <a class="dropdown-item" href="{{ url_for('main.update_order_status_agent',order_id=order.id, status_option='delivered') }}">Order Delivered</a>
+                    </div>
+                  </div>
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="Third group">
+                <a class="btn btn-primary" href='https://maps.google.com/?q=17.3494228,78.5458833' target="_blank"><span class="fa fa-truck">&nbsp;<strong>Start Navigation</strong></span></a>
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="Fourth group">
+                <a class="btn btn-primary" href="tel:{{order.phone}}"><span class="fa fa-phone">&nbsp;<strong>Phone</strong></span></a>  
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="Fourth group">
+                <a class="btn btn-secondary" href="https://api.whatsapp.com/send?phone={{order.phone}}" class="whatsapp" target="_blank">
+                    <i class="fa fa-whatsapp"></i>Whatsapp</a>
+            </div>            
+            <div class="btn-group mr-2" role="group" aria-label="Fourth group">
+                <a class="btn btn-primary" href="sms:{{order.phone}}?body=TextMessage">Message2</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+  <br>
+{% endblock content %}
