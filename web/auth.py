@@ -20,12 +20,12 @@ def login_post():
         return redirect(url_for('auth.login')) # if user doesn't exist or password is wrong, reload the page
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=True)
-    print(user.roles)
-    print(user.roles[0].name)
+    #TODO: Handle case when role is empty
+    #currently agent is not assigned any role by default
     if user.roles[0].name == 'Admin':
         return redirect(url_for('main.da_list'))
     else:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.agent_home_page'))
 
 @auth.route('/signup')
 def signup():
