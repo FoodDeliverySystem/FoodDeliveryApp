@@ -78,7 +78,10 @@
   <div class="container card text-center">
     <div class="row card-body">
       <div class="col">
-        <a class="btn btn-secondary btn btn-primary" href="{{ url_for('main.assign_view', order_id=order.id) }}">{{ assign_btn_label }} Order</a>
+        <a class="btn btn-dark btn" href="{{ url_for('main.assign_view', order_id=order.id) }}">{{ assign_btn_label }} Order</a>
+      </div>
+      <div class="col" role="group" > 
+        <a class="btn btn-dark" href="tel:{{order.phone}}"><span class="fa fa-phone">&nbsp;<strong>Phone</strong></span></a>  
       </div>
       <div class="col">
         <div class="btn-group">

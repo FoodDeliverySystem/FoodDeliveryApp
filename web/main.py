@@ -1,11 +1,10 @@
 from flask import Blueprint
 from . import db
 from .models import *
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, escape
 from flask_login import login_required, current_user
 from flask_user import roles_required
 from .forms import *
-import webbrowser
 
 main = Blueprint('main', __name__)
 
@@ -72,7 +71,13 @@ def order(order_id):
 @login_required
 def detailed_order(order_id):
     order = Order.query.get_or_404(order_id)
-    return render_template('agent_order_view.html', order=order, agent=current_user)
+    complete_address = order.cust_addr1
+    if order.cust_addr2:
+        complete_address = complete_address + ' ' + order.cust_addr2
+    complete_address = complete_address + ' ' + order.cust_pincode
+    # making the address url safe
+    escaped_address = escape(complete_address)
+    return render_template('agent_order_view.html', order=order, agent=current_user, escaped_address=escaped_address)
 
 @main.route("/assign_view/<int:order_id>")
 @login_required
