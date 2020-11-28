@@ -105,7 +105,7 @@ def update_order_status(order_id, status_option):
     message_body = 'Kanishka Redmond Update\nOrder ID: {}\nStatus: {}'.format(str(order.id), str(order.status))
     # should work on iOS 8+ and Android (only for single sender and message)
     # Ref https://stackoverflow.com/questions/6480462/how-to-pre-populate-the-sms-body-text-via-an-html-link
-    sms_string = 'sms://{};?&body={}'.format(str(order.phone), message_body)
+    sms_string = 'sms:{};?&body={}'.format(str(order.phone), message_body)
     return redirect(sms_string)
 
 @main.route("/get_order_status/<int:order_id>", methods=['GET', 'POST'])
@@ -121,9 +121,7 @@ def update_order_status_agent(order_id, status_option):
     order.status = OrderStatus[status_option]
     db.session.commit()
     message_body = 'Kanishka Redmond Update\nOrder ID: {}\nStatus: {}'.format(str(order.id), str(order.status))
-    # should work on iOS 8+ and Android (only for single sender and message)
-    # Ref https://stackoverflow.com/questions/6480462/how-to-pre-populate-the-sms-body-text-via-an-html-link
-    sms_string = 'sms://{};?&body={}'.format(str(order.phone), message_body)
+    sms_string = 'sms:{};?&body={}'.format(str(order.phone), message_body)
     return redirect(sms_string)
 
 @main.route("/create_order", methods=['GET', 'POST'])
