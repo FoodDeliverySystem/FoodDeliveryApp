@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 from flask_user import roles_required
 from .forms import *
-
+import webbrowser
 
 main = Blueprint('main', __name__)
 
@@ -102,7 +102,17 @@ def update_order_status(order_id, status_option):
     order = Order.query.get_or_404(order_id)
     order.status = OrderStatus[status_option]
     db.session.commit()
-    return (redirect(url_for('main.order', order_id=order.id)))
+    message_body = 'Kanishka Redmond Update\nOrder ID: {}\nStatus: {}'.format(str(order.id), str(order.status))
+    # should work on iOS 8+ and Android (only for single sender and message)
+    # Ref https://stackoverflow.com/questions/6480462/how-to-pre-populate-the-sms-body-text-via-an-html-link
+    sms_string = 'sms://{};?&body={}'.format(str(order.phone), message_body)
+    return redirect(sms_string)
+
+@main.route("/get_order_status/<int:order_id>", methods=['GET', 'POST'])
+@login_required
+def get_order_status(order_id):
+    order = Order.query.get_or_404(order_id)
+    return '<span class="badge badge-dark">{}</span>'.format(order.status)
 
 @main.route("/update_order_status_agent/<int:order_id>/<string:status_option>", methods=['GET', 'POST'])
 @login_required
@@ -110,8 +120,11 @@ def update_order_status_agent(order_id, status_option):
     order = Order.query.get_or_404(order_id)
     order.status = OrderStatus[status_option]
     db.session.commit()
-    orders = db.session.query(Order).filter(Order.user_id == current_user.id ,Order.status != OrderStatus.delivered).all()
-    return render_template('agent_assigned_orders_view.html', agent=current_user, orders = orders)
+    message_body = 'Kanishka Redmond Update\nOrder ID: {}\nStatus: {}'.format(str(order.id), str(order.status))
+    # should work on iOS 8+ and Android (only for single sender and message)
+    # Ref https://stackoverflow.com/questions/6480462/how-to-pre-populate-the-sms-body-text-via-an-html-link
+    sms_string = 'sms://{};?&body={}'.format(str(order.phone), message_body)
+    return redirect(sms_string)
 
 @main.route("/create_order", methods=['GET', 'POST'])
 @login_required
