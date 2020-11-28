@@ -72,7 +72,7 @@
         <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&query={{escaped_address}}" target="_blank">Navigate</a>
       </div>
       <div class="btn-group mr-2 col" role="group" aria-label="Second group">
-        <div class="btn-group">
+        <div class="btn-group mr-2 col">
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Update Status
           </button>
@@ -97,9 +97,6 @@
           <a class="btn btn-dark" href="https://api.whatsapp.com/send?phone={{order.phone}}" class="whatsapp" target="_blank">
               <i class="fa fa-whatsapp">Whatsapp</i>
           </a>
-      </div>            
-      <div class="btn-group mr-2 col" role="group" >
-          <a class="btn btn-dark" href="sms:{{order.phone}};?&body=TextMessage">SMS</a>
       </div>
     </div>
   </div>
