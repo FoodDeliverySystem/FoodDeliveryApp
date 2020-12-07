@@ -162,6 +162,6 @@ def agent_view():
 @roles_required('Agent')
 @login_required
 def agent_dorders():
-    orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered, Order.user_id == current_user.id).order_by(Order.id.desc()).all()
+    orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered, Order.user_id == current_user.id).order_by(Order.id).all()
     agent = User.query.get_or_404(current_user.id)
     return render_template('agent_dorders.html', orders=orders, agent=agent,title='List of Delivered Orders')
