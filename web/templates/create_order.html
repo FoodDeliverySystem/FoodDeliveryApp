@@ -121,7 +121,7 @@
             </div>
           </div>
       </p>
-      <p>
+    <p>
         <div class="form-group">
             {{ form.delivery_instructions.label(class="form-control-label") }}
             {% if form.delivery_instructions.errors %}
@@ -133,6 +133,21 @@
                 </div>
             {% else %}
                 {{ form.delivery_instructions(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+    </p>
+    <p>
+        <div class="form-group">
+            {{ form.user_tip.label(class="form-control-label") }}
+            {% if form.user_tip.errors %}
+                {{ form.user_tip(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.user_tip.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.user_tip(class="form-control form-control-lg") }}
             {% endif %}
         </div>
     </p>

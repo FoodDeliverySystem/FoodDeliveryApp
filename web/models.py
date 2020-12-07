@@ -69,6 +69,7 @@ class Order(db.Model, UserMixin):
     # User/Agent details
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref=db.backref('user', lazy='dynamic'))
+    user_tip = db.Column(db.Float, default=0.0)
     # Customer details
     cust_name = db.Column(db.String(30), nullable=False)
     phone = db.Column(db.String(15), nullable=False)
@@ -80,5 +81,3 @@ class Order(db.Model, UserMixin):
     delivery_start_time = db.Column(db.Time,nullable=True)
     delivery_end_time = db.Column(db.Time,nullable=True)
     delivery_instructions = db.Column(db.String(300), nullable=True)
-
-    

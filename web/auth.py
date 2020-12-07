@@ -25,7 +25,7 @@ def login_post():
     if user.roles[0].name == 'Admin':
         return redirect(url_for('main.da_list'))
     else:
-        return redirect(url_for('main.agent_home_page'))
+        return redirect(url_for('main.agent_view'))
 
 @auth.route('/signup')
 def signup():
@@ -42,14 +42,15 @@ def signup_post():
     if password != confirm_password:
         flash("Passwords don't match!")
         return redirect(url_for('auth.login'))
-
     user = User.query.filter_by(email=email).first() 
 
     if user:
         flash('Email address already exists, please login!')
         return redirect(url_for('auth.signup'))
     
-    new_user = User(username=name, email=email,phone_no=phonenumber,password=bcrypt.generate_password_hash(password).decode('utf-8'), is_working=True)
+    default_role = Role.query.filter_by(name='Agent').first()
+    new_user = User(username=name, email=email, phone_no=phonenumber, password=bcrypt.generate_password_hash(password).decode('utf-8'), is_working=True)
+    new_user.roles.append(default_role)
     db.session.add(new_user)
     db.session.commit()
 

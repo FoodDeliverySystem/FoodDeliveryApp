@@ -34,6 +34,9 @@
       <div class="col">
         Status
       </div>
+      <div class="col">
+        Tip
+      </div>
     </div>
   </div>
   <div class="container card">
@@ -46,6 +49,13 @@
       </div>
       <div class="col" id="div_status">
         <span class="badge badge-dark">{{ order.status }}</span>
+      </div>
+      <div class="col">
+        {% if order.user_tip %}
+          ${{order.user_tip}}
+        {% else %}
+          $0
+        {% endif %}
       </div>
     </div>
   </div>
@@ -72,6 +82,19 @@
   {% else %}
   <div class="text-black text-center font-weight-bold">
     This order is currently unassigned.
+  </div>
+  {% endif %}
+  {% if order.delivery_instructions %}
+  <br>
+  <div class="container card text-center text-white bg-dark">
+    Delivery Instructions
+  </div>
+  <div class="container card">
+    <div class="row card-body">
+      <div class>
+        {{ order.delivery_instructions }}
+      </div>
+    </div>
   </div>
   {% endif %}
   <br><br>

@@ -11,7 +11,10 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
     if current_user.is_authenticated:
-        return redirect(url_for('main.da_list'))
+        if current_user.has_roles('Admin'):
+            return redirect(url_for('main.da_list'))
+        else:
+            return redirect(url_for('main.agent_view'))
     else:
         return redirect(url_for('auth.login'))
 
@@ -23,6 +26,7 @@ def da_list():
     return render_template('da_list.html', agents=agents)
 
 @main.route("/agent/<int:agent_id>", methods=['GET'])
+@roles_required('Admin')
 @login_required
 def agent(agent_id):
     agent = User.query.get_or_404(agent_id)
@@ -30,37 +34,36 @@ def agent(agent_id):
     return render_template('agent.html', agent=agent, orders=orders)
 
 @main.route("/current_orders", methods=['GET'])
+@roles_required('Admin')
 @login_required
 def current_orders():
     orders = db.session.query(Order).filter(Order.status != OrderStatus.delivered).order_by(Order.id).all()
     return render_template('orders_list.html', orders=orders, title='List of Open Orders')
 
 @main.route("/delivered_orders", methods=['GET'])
+@roles_required('Admin')
 @login_required
 def delivered_orders():
     orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered).order_by(Order.id).all()
     return render_template('orders_list.html', orders=orders, title='List of Delivered Orders')
 
 @main.route("/unassigned_orders", methods=['GET'])
+@roles_required('Admin')
 @login_required
 def unassigned_orders():
     orders = db.session.query(Order.cust_pincode).filter(Order.user_id == None ,Order.status != OrderStatus.delivered).group_by(Order.cust_pincode).all()
     return render_template('pincode_list.html', orders=orders, title="Pincodes of open orders")
 
 @main.route("/pin_orders/<string:pin>", methods=['GET'])
+@roles_required('Admin')
 @login_required
 def pin_orders(pin):
     orders = db.session.query(Order).filter(Order.user_id == None, Order.status != OrderStatus.delivered, Order.cust_pincode == pin).order_by(Order.id).all()
     title = "Orders in " + pin
     return render_template('orders_list.html', orders=orders, title=title)
 
-# @main.route("/unassigned_orders", methods=['GET'])
-# @login_required
-# def unassigned_orders():
-#     orders = db.session.query(Order).filter(Order.user_id == None).order_by(Order.id).all()
-#     return render_template('orders_list.html', orders=orders, title='List of Un-assigned Orders')
-
 @main.route("/order/<int:order_id>", methods=['GET'])
+@roles_required('Admin')
 @login_required
 def order(order_id):
     order = Order.query.get_or_404(order_id)
@@ -68,6 +71,7 @@ def order(order_id):
     return render_template('order.html', order=order, agent=agent)
 
 @main.route("/agent_order_view/<int:order_id>")
+@roles_required('Agent')
 @login_required
 def detailed_order(order_id):
     order = Order.query.get_or_404(order_id)
@@ -80,12 +84,14 @@ def detailed_order(order_id):
     return render_template('agent_order_view.html', order=order, agent=current_user, escaped_address=escaped_address)
 
 @main.route("/assign_view/<int:order_id>")
+@roles_required('Admin')
 @login_required
 def assign_view(order_id):
     agents = User.query.filter_by(is_working=True)
     return render_template('assign_view.html', agents=agents, order_id=order_id)
 
 @main.route("/assign_order/<int:order_id>/<int:user_id>")
+@roles_required('Admin')
 @login_required
 def assign_order(order_id, user_id):
     order = Order.query.get_or_404(order_id)
@@ -102,6 +108,7 @@ def da_update_status(agent_id):
     return (redirect(url_for('main.agent', agent_id=agent.id)))
 
 @main.route("/update_order_status/<int:order_id>/<string:status_option>", methods=['GET', 'POST'])
+@roles_required('Admin')
 @login_required
 def update_order_status(order_id, status_option):
     order = Order.query.get_or_404(order_id)
@@ -120,6 +127,7 @@ def get_order_status(order_id):
     return '<span class="badge badge-dark">{}</span>'.format(order.status)
 
 @main.route("/update_order_status_agent/<int:order_id>/<string:status_option>", methods=['GET', 'POST'])
+@roles_required('Agent')
 @login_required
 def update_order_status_agent(order_id, status_option):
     order = Order.query.get_or_404(order_id)
@@ -130,6 +138,7 @@ def update_order_status_agent(order_id, status_option):
     return redirect(sms_string)
 
 @main.route("/create_order", methods=['GET', 'POST'])
+@roles_required('Admin')
 @login_required
 def create_order():
     create_order_form = OrderItemsForm()
@@ -142,8 +151,17 @@ def create_order():
     return render_template('create_order.html', form=create_order_form)
 
 @main.route("/agent_view")
+@roles_required('Agent')
 @login_required
-def agent_home_page():
+def agent_view():
     print(current_user.id)
     orders = db.session.query(Order).filter(Order.user_id == current_user.id ,Order.status != OrderStatus.delivered).all()
     return render_template('agent_assigned_orders_view.html', agent=current_user, orders = orders)
+
+@main.route("/agent_dorders", methods=['GET'])
+@roles_required('Agent')
+@login_required
+def agent_dorders():
+    orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered, Order.user_id == current_user.id).order_by(Order.id.desc()).all()
+    agent = User.query.get_or_404(current_user.id)
+    return render_template('agent_dorders.html', orders=orders, agent=agent,title='List of Delivered Orders')

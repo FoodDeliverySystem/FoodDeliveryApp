@@ -19,7 +19,7 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Hello {{current_user.username}}!</a>
+          <a class="navbar-brand mr-4" href="{{ url_for('main.da_list') }}">Hello {{current_user.username}}!</a>
           <div class="navbar">
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
@@ -38,11 +38,7 @@
         <div class="col-md-8">
           {% with messages =  get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{category}}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+              {{ messages[0] }}
             {% endif %}
           {% endwith %}
           {% block content %}{% endblock %}
@@ -58,9 +54,6 @@
                 <a href="{{ url_for('main.unassigned_orders') }}" >
                   <li class="list-group-item list-group-item-light">Unassigned Orders</li>
                 </a>
-                <!-- <a href="{{ url_for('main.unassigned_orders') }}" >
-                  <li class="list-group-item list-group-item-light">Unassigned Orders</li>
-                </a> -->
                 <a href="{{ url_for('main.current_orders') }}" >
                   <li class="list-group-item list-group-item-light">Current Orders</li>
                 </a>
