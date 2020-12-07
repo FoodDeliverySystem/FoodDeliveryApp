@@ -22,7 +22,8 @@ def index():
 @roles_required('Admin')
 @login_required
 def da_list():
-    agents = User.query.order_by(User.id).all()
+    agent_role = Role.query.filter_by(name='Agent').first()
+    agents = db.session.query(User).filter(User.roles.contains(agent_role))
     return render_template('da_list.html', agents=agents)
 
 @main.route("/agent/<int:agent_id>", methods=['GET'])
@@ -151,7 +152,6 @@ def create_order():
     return render_template('create_order.html', form=create_order_form)
 
 @main.route("/agent_view")
-@roles_required('Agent')
 @login_required
 def agent_view():
     print(current_user.id)
