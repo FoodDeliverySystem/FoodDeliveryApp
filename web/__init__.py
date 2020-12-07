@@ -9,7 +9,9 @@ from flask_admin.contrib.sqla import ModelView
 from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy  import SQLAlchemy
-from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
+from flask_admin import Admin, AdminIndexView
+from flask_login import login_required, current_user
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'eibccckhvccjlcivhjggujflbifrucgirbbgebtgvnfr'
@@ -25,8 +27,11 @@ login_manager.login_message_category = 'info'
 login_manager.init_app(app)
 bootstrap = Bootstrap(app)
 
+class MyAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        return current_user.has_roles('Admin')
 
-admin = Admin(app, name='Admin', template_mode='bootstrap4')
+admin = Admin(app, name='Admin', template_mode='bootstrap4', index_view=MyAdminIndexView())
 
 
 
