@@ -8,8 +8,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login.css') }}">-->
-    <!--<script language="Javascript" type=text/javascript src="{{url_for('static', filename='js/login_alert.js') }}"></script>-->
     <style>
         .modal-content{
     background-color: darkcyan;
@@ -30,8 +28,6 @@
 
 <body>
     <div class="">
-        
-
         <div class="modal-dialog">
             <h1 class="text-center">Kanishka Delivery Service</h1>
             <div class="modal-content">
@@ -41,7 +37,7 @@
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 <div class="alert alert-danger" role="alert">
-                    {{messages[0]}}
+                    {{ messages[0] }}
                 </div>
                 {%  endif  %}
                 {% endwith %}
@@ -68,6 +64,9 @@
                             <a href="#" class="btn btn-link">Forgot Password</a>
                         </div>
                     </form>
+                    <div class="form-group text-center">
+                        <a href="{{ url_for('auth.signup') }}" class="btn btn-link">Sign Up</a>
+                    </div>
                 </div>
             </div>
         </div>
