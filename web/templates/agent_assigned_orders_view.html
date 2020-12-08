@@ -15,7 +15,7 @@
         {{ agent.username }}
       </div>
       <div class="col">
-        {{ agent.phone_no }}
+        <a href="tel:{{agent.phone_no}}">{{agent.phone_no}}</a>  
       </div>
       <div class="col">
         <span class="badge badge-dark">Orders:{{orders.items|length}}</span>

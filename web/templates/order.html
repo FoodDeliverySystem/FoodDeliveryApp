@@ -14,12 +14,12 @@
 {% endif %}
 <br><br>
 <script>
-  $(document).ready( function() {
-      $('#status_update_btn').click(function() {
-          $.ajax("{{ url_for('main.get_order_status', order_id=order.id) }}").done(function (reply) {
-            $('#div_status').html(reply);
-          });
+  $(document).ready(function () {
+    $('#status_update_btn').click(function () {
+      $.ajax("{{ url_for('main.get_order_status', order_id=order.id) }}").done(function (reply) {
+        $('#div_status').html(reply);
       });
+    });
   });
 </script>
 <div class="container">
@@ -29,7 +29,7 @@
         Order ID
       </div>
       <div class="col">
-        Pincode
+        Customer
       </div>
       <div class="col">
         Status
@@ -45,21 +45,23 @@
         {{ order.id }}
       </div>
       <div class="col">
-        {{ order.cust_pincode }}
+        {{ order.cust_name }}
       </div>
       <div class="col" id="div_status">
         <span class="badge badge-dark">{{ order.status }}</span>
       </div>
       <div class="col">
-        {% if order.user_tip %}
+        <span class="badge badge-dark">
+          {% if order.user_tip %}
           ${{order.user_tip}}
-        {% else %}
+          {% else %}
           $0
-        {% endif %}
+          {% endif %}
+        </span>
       </div>
     </div>
   </div>
-  <br><br>
+  <br>
   {% if agent %}
   <div class="container card text-center text-white bg-dark">
     Assignee
@@ -79,11 +81,32 @@
       </div>
     </a>
   </div>
+  <br>
   {% else %}
   <div class="text-black text-center font-weight-bold">
     This order is currently unassigned.
   </div>
+  <br>
   {% endif %}
+  <div class="container card text-center text-white bg-dark">
+    Delivery Details
+  </div>
+  <div class="container card">
+    <div class="row card-body">
+      <div class>
+        {{ order.cust_name }}
+        <br>
+        {{ order.cust_addr1 }}
+        <br>
+        {% if order.cust_addr2 %}
+        {{ order.cust_addr2 }}
+        <br>
+        {% endif %}
+        {{ order.cust_pincode }}
+        <br>
+      </div>
+    </div>
+  </div>
   {% if order.delivery_instructions %}
   <br>
   <div class="container card text-center text-white bg-dark">
@@ -101,30 +124,44 @@
   <div class="container card text-center">
     <div class="row card-body">
       <div class="col">
-        <a class="btn btn-dark btn" href="{{ url_for('main.assign_view', order_id=order.id) }}">{{ assign_btn_label }} Order</a>
+        <a class="btn btn-dark btn" href="{{ url_for('main.assign_view', order_id=order.id) }}">{{ assign_btn_label }}
+          Order</a>
       </div>
-      <div class="col" role="group" > 
-        <a class="btn btn-dark" href="tel:{{order.phone}}"><span class="fa fa-phone">&nbsp;<strong>Phone</strong></span></a>  
+      <div class="col" role="group">
+        <a class="btn btn-dark" href="tel:{{order.phone}}"><span
+            class="fa fa-phone">&nbsp;<strong>Phone</strong></span></a>
       </div>
       <div class="col">
         <div class="btn-group">
-          <button type="button" id="status_update_btn" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button type="button" id="status_update_btn" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
             Update Status
           </button>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="{{ url_for('main.update_order_status',order_id=order.id, status_option='accepted') }}">Accepted</a>
-            <a class="dropdown-item" href="{{ url_for('main.update_order_status',order_id=order.id, status_option='cooking') }}">Preparing your meal</a>
+            <a class="dropdown-item"
+              href="{{ url_for('main.update_order_status',order_id=order.id, status_option='accepted') }}">Accepted</a>
+            <a class="dropdown-item"
+              href="{{ url_for('main.update_order_status',order_id=order.id, status_option='cooking') }}">Preparing your
+              meal</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{ url_for('main.update_order_status',order_id=order.id, status_option='eta_30') }}">Your Order is 30 Minutes Away</a>
-            <a class="dropdown-item" href="{{ url_for('main.update_order_status',order_id=order.id, status_option='eta_10') }}">Your Order is 10 Minutes Away</a>
+            <a class="dropdown-item"
+              href="{{ url_for('main.update_order_status',order_id=order.id, status_option='eta_30') }}">Your Order is
+              30 Minutes Away</a>
+            <a class="dropdown-item"
+              href="{{ url_for('main.update_order_status',order_id=order.id, status_option='eta_10') }}">Your Order is
+              10 Minutes Away</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{ url_for('main.update_order_status',order_id=order.id, status_option='reached') }}">Your Order has reached your location</a>
-            <a class="dropdown-item" href="{{ url_for('main.update_order_status',order_id=order.id, status_option='delivered') }}">Order Delivered</a>
+            <a class="dropdown-item"
+              href="{{ url_for('main.update_order_status',order_id=order.id, status_option='reached') }}">Your Order has
+              reached your location</a>
+            <a class="dropdown-item"
+              href="{{ url_for('main.update_order_status',order_id=order.id, status_option='delivered') }}">Order
+              Delivered</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-  <br>
+<br>
 {% endblock content %}
