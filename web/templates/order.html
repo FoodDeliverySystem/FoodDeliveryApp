@@ -29,9 +29,6 @@
         Order ID
       </div>
       <div class="col">
-        Customer
-      </div>
-      <div class="col">
         Status
       </div>
       <div class="col">
@@ -43,9 +40,6 @@
     <div class="row card-body">
       <div class="col">
         {{ order.id }}
-      </div>
-      <div class="col">
-        {{ order.cust_name }}
       </div>
       <div class="col" id="div_status">
         <span class="badge badge-dark">{{ order.status }}</span>
@@ -94,7 +88,7 @@
   <div class="container card">
     <div class="row card-body">
       <div class>
-        {{ order.cust_name }}
+        <strong>{{ order.cust_name }}</strong>
         <br>
         {{ order.cust_addr1 }}
         <br>

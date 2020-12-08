@@ -30,23 +30,20 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('That email is taken. Please choose a different one.')
 
 class OrderItemsForm(FlaskForm):
-    #company = SelectField("Company", choices=Company.choices(), coerce=Company.coerce)
-
-    #status = StringField('Status of Order', validators=[DataRequired()], default=OrderStatus.accepted.value)
     status = SelectField('Status of Order', choices=OrderStatus.choices())
     cust_name = StringField('Customer Name', validators=[DataRequired(), Length(min=3, max=30)])
     phone = StringField('Phone', validators=[DataRequired(), Length(10)])
     cust_addr1 = TextAreaField('Address Line 1', validators=[DataRequired(), Length(min=5, max=65)],  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
     cust_addr2 = TextAreaField('Address Line 2', validators=[Length(min=0, max=65)],  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
     cust_pincode = StringField('Pin Code', validators=[DataRequired(), Length(min=5, max=12)])
-    delivery_date = DateField('Delivery Date', format='%Y-%m-%d',  validators=[DataRequired()])
     user_tip = FloatField('Tip', default=0)
-    delivery_start_time = TimeField('Start Time')
-    delivery_end_time = TimeField('End Time')
     delivery_instructions = TextAreaField('Delivery Instructions',  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
     order_items = TextAreaField('Order Items', render_kw={'class': 'form-control', 'rows': 5, 'cols':5, 'readonly': True})
     submit = SubmitField('Add Order')
-
+    # delivery_date = DateField('Delivery Date', format='%Y-%m-%d',  validators=[DataRequired()])
+    # delivery_start_time = TimeField('Start Time')
+    # delivery_end_time = TimeField('End Time')
+    
     def validate_phone(form, field):
         if len(field.data) > 16:
             raise ValidationError('length should be less than 16')

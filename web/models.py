@@ -58,12 +58,11 @@ class OrderStatus(Enum):
     def __str__(self):
         return str(self.value)
 
-
 class Order(db.Model, UserMixin):
     __tablename__ = 'orders'
     # Order Details
     id = db.Column(db.Integer, primary_key=True)
-    #order_items = db.Column(db.String(300), nullable=True)
+    # metadata
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     status = db.Column(db.Enum(OrderStatus), nullable=False, default=OrderStatus.accepted)
     # User/Agent details
@@ -77,7 +76,4 @@ class Order(db.Model, UserMixin):
     cust_addr2 = db.Column(db.String(65), nullable=True)
     cust_pincode = db.Column(db.String(12), nullable=False)
     #Delivery Details
-    delivery_date = db.Column(db.Date,nullable=True)
-    delivery_start_time = db.Column(db.Time,nullable=True)
-    delivery_end_time = db.Column(db.Time,nullable=True)
     delivery_instructions = db.Column(db.String(300), nullable=True)

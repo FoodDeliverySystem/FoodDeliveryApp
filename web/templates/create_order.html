@@ -79,49 +79,6 @@
   </div>
   </p>
   <p>
-  <div class="form-row align-items-center">
-    <div class="form-group col-md-4">
-      {{ form.delivery_date.label(class="form-control-label") }}
-      {% if form.delivery_date.errors %}
-      {{ form.delivery_date(class="form-control is-invalid") }}
-      <div class="invalid-feedback">
-        {% for error in form.delivery_date.errors %}
-        <span>{{ error }}</span>
-        {% endfor %}
-      </div>
-      {% else %}
-      {{ form.delivery_date(class="form-control form-control-lg") }}
-      {% endif %}
-    </div>
-    <div class="form-group col-md-4">
-      {{ form.delivery_start_time.label(class="form-control-label") }}
-      {% if form.delivery_start_time.errors %}
-      {{ form.delivery_start_time(class="form-control is-invalid") }}
-      <div class="invalid-feedback">
-        {% for error in form.delivery_start_time.errors %}
-        <span>{{ error }}</span>
-        {% endfor %}
-      </div>
-      {% else %}
-      {{ form.delivery_start_time(class="form-control form-control-lg") }}
-      {% endif %}
-    </div>
-    <div class="form-group col-md-4">
-      {{ form.delivery_end_time.label(class="form-control-label") }}
-      {% if form.delivery_end_time.errors %}
-      {{ form.delivery_end_time(class="form-control is-invalid") }}
-      <div class="invalid-feedback">
-        {% for error in form.delivery_end_time.errors %}
-        <span>{{ error }}</span>
-        {% endfor %}
-      </div>
-      {% else %}
-      {{ form.delivery_end_time(class="form-control form-control-lg") }}
-      {% endif %}
-    </div>
-  </div>
-  </p>
-  <p>
   <div class="form-group">
     {{ form.delivery_instructions.label(class="form-control-label") }}
     {% if form.delivery_instructions.errors %}

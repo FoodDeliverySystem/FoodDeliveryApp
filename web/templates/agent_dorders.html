@@ -20,7 +20,7 @@
       Order ID
     </div>
     <div class="col">
-      Delivery Details
+      Customer
     </div>
     <div class="col">
       Status
@@ -36,7 +36,7 @@
         {{ order.id }}
       </div>
       <div class="col">
-        Date - {{ order.delivery_date }} <br> Time - {{ order.delivery_start_time }} - {{ order.delivery_end_time }}
+        {{ order.cust_name }}
       </div>
       <div class="col">
         <span class="badge badge-dark">{{ order.status }}</span>
