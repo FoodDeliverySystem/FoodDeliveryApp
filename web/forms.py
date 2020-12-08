@@ -40,7 +40,7 @@ class OrderItemsForm(FlaskForm):
     cust_addr2 = TextAreaField('Address Line 2', validators=[Length(min=0, max=65)],  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
     cust_pincode = StringField('Pin Code', validators=[DataRequired(), Length(min=5, max=12)])
     delivery_date = DateField('Delivery Date', format='%Y-%m-%d',  validators=[DataRequired()])
-    user_tip = FloatField('Tip')
+    user_tip = FloatField('Tip', default=0)
     delivery_start_time = TimeField('Start Time')
     delivery_end_time = TimeField('End Time')
     delivery_instructions = TextAreaField('Delivery Instructions',  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
