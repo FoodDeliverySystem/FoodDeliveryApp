@@ -1,7 +1,7 @@
 from flask import Blueprint
 from . import db
 from .models import *
-from flask import Blueprint, render_template, redirect, url_for, flash, escape
+from flask import Blueprint, render_template, redirect, url_for, flash, escape, request
 from flask_login import login_required, current_user
 from flask_user import roles_required
 from .forms import *
@@ -38,15 +38,18 @@ def agent(agent_id):
 @roles_required('Admin')
 @login_required
 def current_orders():
-    orders = db.session.query(Order).filter(Order.status != OrderStatus.delivered).order_by(Order.id).all()
-    return render_template('orders_list.html', orders=orders, title='List of Open Orders')
+    page = request.args.get('page', 1 , type=int)
+    orders = db.session.query(Order).filter(Order.status != OrderStatus.delivered).order_by(Order.id).paginate(page=page, per_page=8)
+    return render_template('orders_list.html', orders=orders, title='List of Open Orders', base_func='current_orders')
 
 @main.route("/delivered_orders", methods=['GET'])
 @roles_required('Admin')
 @login_required
 def delivered_orders():
-    orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered).order_by(Order.id).all()
-    return render_template('orders_list.html', orders=orders, title='List of Delivered Orders')
+    page = request.args.get('page', 1 , type=int)
+    # Delivered orders need to be in descending
+    orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered).order_by(Order.id.desc()).paginate(page=page, per_page=8)
+    return render_template('orders_list.html', orders=orders, title='List of Delivered Orders', base_func='delivered_orders')
 
 @main.route("/unassigned_orders", methods=['GET'])
 @roles_required('Admin')
@@ -59,9 +62,10 @@ def unassigned_orders():
 @roles_required('Admin')
 @login_required
 def pin_orders(pin):
-    orders = db.session.query(Order).filter(Order.user_id == None, Order.status != OrderStatus.delivered, Order.cust_pincode == pin).order_by(Order.id).all()
+    page = request.args.get('page', 1 , type=int)
+    orders = db.session.query(Order).filter(Order.user_id == None, Order.status != OrderStatus.delivered, Order.cust_pincode == pin).order_by(Order.id).paginate(page=page, per_page=8)
     title = "Orders in " + pin
-    return render_template('orders_list.html', orders=orders, title=title)
+    return render_template('orders_list.html', orders=orders, title=title, base_func='pin_orders')
 
 @main.route("/order/<int:order_id>", methods=['GET'])
 @roles_required('Admin')
@@ -154,14 +158,15 @@ def create_order():
 @main.route("/agent_view")
 @login_required
 def agent_view():
-    print(current_user.id)
-    orders = db.session.query(Order).filter(Order.user_id == current_user.id ,Order.status != OrderStatus.delivered).all()
-    return render_template('agent_assigned_orders_view.html', agent=current_user, orders = orders)
+    page = request.args.get('page', 1 , type=int)
+    orders = db.session.query(Order).filter(Order.user_id == current_user.id ,Order.status != OrderStatus.delivered).paginate(page=page, per_page=8)
+    return render_template('agent_assigned_orders_view.html', agent=current_user, orders = orders, page=page)
 
 @main.route("/agent_dorders", methods=['GET'])
 @roles_required('Agent')
 @login_required
 def agent_dorders():
-    orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered, Order.user_id == current_user.id).order_by(Order.id).all()
+    page = request.args.get('page', 1 , type=int)
+    orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered, Order.user_id == current_user.id).order_by(Order.id.desc()).paginate(page=page, per_page=8)
     agent = User.query.get_or_404(current_user.id)
-    return render_template('agent_dorders.html', orders=orders, agent=agent,title='List of Delivered Orders')
+    return render_template('agent_dorders.html', orders=orders, agent=agent,title='List of Delivered Orders', page=page)
