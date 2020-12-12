@@ -8,6 +8,18 @@ from .forms import *
 
 main = Blueprint('main', __name__)
 
+@app.errorhandler(403)
+def unauthorized(e):
+    return render_template('error_page.html', error_code=403, error_message='You are not allowed to access this page!'), 403
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error_page.html', error_code=404, error_message='Page Not Found!'), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('error_page.html', error_code=500, error_message='Internal Server Error!'), 500
+
 @main.route('/')
 def index():
     if current_user.is_authenticated:
