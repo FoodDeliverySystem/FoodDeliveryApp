@@ -155,6 +155,58 @@ def create_order():
         return (redirect(url_for('main.create_order')))
     return render_template('create_order.html', form=create_order_form)
 
+@main.route("/edit_order/<int:order_id>", methods=['GET', 'POST'])
+@roles_required('Admin')
+@login_required
+def edit_order(order_id):
+    order = Order.query.get_or_404(order_id)
+    order.status=OrderStatus(order.status).name
+    edit_order_form = OrderItemsForm(obj=order)
+    print("In method 1")
+    if edit_order_form.validate_on_submit(): 
+        print("In method")
+        # new_order = Order(
+        # status=create_order_form.status.data, 
+        # cust_name=create_order_form.cust_name.data, 
+        # phone=create_order_form.phone.data,
+        # cust_addr1=create_order_form.cust_addr1.data, 
+        # cust_addr2=create_order_form.cust_addr2.data,
+        # cust_pincode=create_order_form.cust_pincode.data, 
+        # delivery_instructions=create_order_form.delivery_instructions.data,
+        # user_tip=create_order_form.user_tip.data)
+        # update_existing_order(order,create_order_form)
+        update_existing_order(order, edit_order_form)
+        print(order.cust_name)
+        # db.session.add(new_order)
+        db.session.commit()
+        flash('Order updated successfully!', 'success')
+        return (redirect(url_for('main.current_orders')))
+    print("Before end")
+    return render_template('edit_order.html', form=edit_order_form, order_id=order_id)
+
+@main.route("/delete_order/<int:order_id>", methods=['GET', 'POST'])
+@roles_required('Admin')
+@login_required
+def delete_order(order_id):
+    order = Order.query.get_or_404(order_id)
+    if order:
+        db.session.delete(order)
+        db.session.commit()
+        flash('Order Deleted successfully!', 'success')
+        return (redirect(url_for('main.current_orders')))
+    agent = User.query.get(order.user_id)
+    return render_template('order.html', order=order, agent=agent)
+
+def update_existing_order(order, form):
+    order.status = form.status.data
+    order.cust_name = form.cust_name.data
+    order.phone = form.phone.data
+    order.cust_addr1 = form.cust_addr1.data
+    order.cust_addr2 = form.cust_addr2.data
+    order.cust_pincode = form.cust_pincode.data
+    order.delivery_instructions = form.delivery_instructions.data
+    order.user_tip = form.user_tip.data
+
 @main.route("/agent_view")
 @login_required
 def agent_view():
