@@ -162,26 +162,11 @@ def edit_order(order_id):
     order = Order.query.get_or_404(order_id)
     order.status=OrderStatus(order.status).name
     edit_order_form = OrderItemsForm(obj=order)
-    print("In method 1")
     if edit_order_form.validate_on_submit(): 
-        print("In method")
-        # new_order = Order(
-        # status=create_order_form.status.data, 
-        # cust_name=create_order_form.cust_name.data, 
-        # phone=create_order_form.phone.data,
-        # cust_addr1=create_order_form.cust_addr1.data, 
-        # cust_addr2=create_order_form.cust_addr2.data,
-        # cust_pincode=create_order_form.cust_pincode.data, 
-        # delivery_instructions=create_order_form.delivery_instructions.data,
-        # user_tip=create_order_form.user_tip.data)
-        # update_existing_order(order,create_order_form)
         update_existing_order(order, edit_order_form)
-        print(order.cust_name)
-        # db.session.add(new_order)
         db.session.commit()
         flash('Order updated successfully!', 'success')
         return (redirect(url_for('main.current_orders')))
-    print("Before end")
     return render_template('edit_order.html', form=edit_order_form, order_id=order_id)
 
 @main.route("/delete_order/<int:order_id>", methods=['GET', 'POST'])
