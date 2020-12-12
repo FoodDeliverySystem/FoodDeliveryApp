@@ -7,11 +7,13 @@ from flask_mail import Mail
 from flask_sqlalchemy  import SQLAlchemy
 from flask_user import login_required, SQLAlchemyAdapter, UserManager, UserMixin
 from flask_user import roles_required
+from flask_talisman import Talisman
 from web.models import *
 from web import db
 
 #admin1 = Admin(username='admin', email='admin@admin.com', password='admin', phone_no='384734877')
 app = Flask(__name__)
+Talisman(app)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba254'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://sxpwlhvvkffvkj:09fe494ff2350a489fb95d1c7ff6f8710b61f99efb8cce5910142646415b432e@ec2-52-2-82-109.compute-1.amazonaws.com:5432/d9c8sa7jk8bbii'
 app.config['DEBUG'] = True
