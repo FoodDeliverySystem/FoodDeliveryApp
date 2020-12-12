@@ -37,8 +37,7 @@ class OrderItemsForm(FlaskForm):
     cust_addr2 = TextAreaField('Address Line 2', validators=[Length(min=0, max=65)],  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
     cust_pincode = StringField('Pin Code', validators=[DataRequired(), Length(min=5, max=12)])
     user_tip = FloatField('Tip', default=0)
-    delivery_instructions = TextAreaField('Delivery Instructions',  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
-    order_items = TextAreaField('Order Items', render_kw={'class': 'form-control', 'rows': 5, 'cols':5, 'readonly': True})
+    delivery_instructions = TextAreaField('Delivery Instructions',  render_kw={'class': 'form-control', 'rows': 5, 'cols':5}, validators=[Length(min=0, max=300)])
     submit = SubmitField('Add Order')
     # delivery_date = DateField('Delivery Date', format='%Y-%m-%d',  validators=[DataRequired()])
     # delivery_start_time = TimeField('Start Time')
@@ -55,4 +54,3 @@ class OrderItemsForm(FlaskForm):
             input_number = phonenumbers.parse("+1"+field.data)
             if not (phonenumbers.is_valid_number(input_number)):
                 raise ValidationError('failed validating with +1')
-
