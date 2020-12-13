@@ -61,7 +61,7 @@
 {% endfor %}
 <br><br>
 <div class="mr-2 col col-md-4">
-  <a class="btn btn-primary" href="{{ url_for('main.plot_agent_route', agent_id=agent.id) }}">My Route</a>
+  <a class="btn btn-primary" href="{{ url_for('main.plot_agent_route', agent_id=agent.id) }}" target="_blank">My Route</a>
 </div>
 {% else %}
 <br>
