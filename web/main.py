@@ -109,7 +109,10 @@ def plot_agent_route(agent_id):
     gapi_prefix = r'https://www.google.com/maps/dir/16651+Redmond+way,Redmond,+WA+98052/'
     waypoints = ''
     for order in orders:
-        order_address = quote(order.cust_addr1 + ' ' + order.cust_addr2 + ' ' + order.cust_pincode)
+        order_address = order.cust_addr1 + ' '
+        if order.cust_addr2:
+            order_address = order_address + ' ' + order.cust_addr2
+        order_address = order_address + order.cust_pincode
         waypoints = waypoints + order_address + '/'
     gapi_route = gapi_prefix + waypoints
     #print("GMAPS API CALL:" + gapi_route)
