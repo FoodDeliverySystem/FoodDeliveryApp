@@ -106,7 +106,7 @@ def detailed_order(order_id):
 @login_required
 def plot_agent_route(agent_id):
     orders = db.session.query(Order.cust_addr1, Order.cust_addr2, Order.cust_pincode).filter(Order.user_id == agent_id, Order.status != OrderStatus.delivered).all()
-    gapi_prefix = 'https://www.google.com/maps/dir/Your+Location/'
+    gapi_prefix = r'https://www.google.com/maps/dir/My%20Location/'
     waypoints = ''
     for order in orders:
         order_address = quote(order.cust_addr1 + ' ' + order.cust_addr2 + ' ' + order.cust_pincode)
