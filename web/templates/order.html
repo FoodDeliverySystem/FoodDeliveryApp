@@ -14,13 +14,23 @@
 {% endif %}
 <br><br>
 <script>
-  $(document).ready(function () {
-    $('#status_update_btn').click(function () {
-      $.ajax("{{ url_for('main.get_order_status', order_id=order.id) }}").done(function (reply) {
-        $('#div_status').html(reply);
-      });
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  async function statusUpdate() {
+    var delay = 3500;
+    console.log('Sleeping for ' + delay + ' ms...')
+    await sleep(delay);
+    console.log('Sleep done, moving on.')
+    $.ajax({
+      type: 'GET',
+      url: "{{ url_for('main.get_order_status', order_id=order.id) }}",
+      success: function (response) {
+        $('#div_status').html(response);
+        console.log('Updated status element.')
+      }
     });
-  });
+  }
 </script>
 <div class="container">
   <div class="container card text-left text-white bg-dark">
@@ -127,11 +137,11 @@
       </div>
     </div>
     <div class="row card-body">
-      <div class="col col-md-4 ">
+      <div class="col col-md-4">
         <div class="btn-group">
-          <button type="button" id="status_update_btn" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            UpdateStatus
+          <button type="button" id="status_update_btn" onclick="javascript:statusUpdate()"
+            class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Update Status
           </button>
           <div class="dropdown-menu">
             <a class="dropdown-item"
@@ -160,14 +170,15 @@
         <a class="btn btn-dark btn" href="{{ url_for('main.edit_order', order_id=order.id) }}">Edit Order</a>
       </div>
       <div class="col col-md-4">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteConfirmModal">
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal">
           Delete
         </button>
       </div>
     </div>
-    
+
     <!-- Delete Modal -->
-    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog"
+      aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -181,7 +192,8 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-danger" onclick="window.location.href='{{ url_for('main.delete_order', order_id=order.id) }}';">Delete</button>
+            <button type="button" class="btn btn-danger"
+              onclick="window.location.href='{{ url_for('main.delete_order', order_id=order.id) }}';">Delete</button>
           </div>
         </div>
       </div>
