@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template,redirect, url_for, request, flash
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from .models import *
 from . import db, bcrypt
 from flask import Flask, render_template
+from .forms import RegistrationForm
 
 auth = Blueprint('auth', __name__)
 
@@ -16,45 +17,33 @@ def login_post():
     password = request.form.get('password')
     user = User.query.filter_by(email=email).first()
     if not user or not bcrypt.check_password_hash(user.password, password): 
-        flash('Please check your login details and try again.')
+        flash('Please check your login details and try again.', 'danger')
         return redirect(url_for('auth.login')) # if user doesn't exist or password is wrong, reload the page
-    # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=True)
-    #TODO: Handle case when role is empty
-    #currently agent is not assigned any role by default
     if user.roles[0].name == 'Admin':
         return redirect(url_for('main.da_list'))
     else:
         return redirect(url_for('main.agent_view'))
 
-@auth.route('/signup')
+@auth.route('/signup', methods=['GET', 'POST'])
 def signup():
-    return render_template('signup.html')
-
-@auth.route('/signup', methods=['POST'])
-def signup_post():
-    name = request.form.get('username')
-    email = request.form.get('email')    
-    password = request.form.get('password')
-    confirm_password = request.form.get('confirmpassword')
-    phonenumber = request.form.get('phonenumber')
-
-    if password != confirm_password:
-        flash("Passwords don't match!")
-        return redirect(url_for('auth.login'))
-    user = User.query.filter_by(email=email).first() 
-
-    if user:
-        flash('Email address already exists, please login!')
-        return redirect(url_for('auth.signup'))
-    
-    default_role = Role.query.filter_by(name='Agent').first()
-    new_user = User(username=name, email=email, phone_no=phonenumber, password=bcrypt.generate_password_hash(password).decode('utf-8'), is_working=True)
-    new_user.roles.append(default_role)
-    db.session.add(new_user)
-    db.session.commit()
-
-    return redirect(url_for('auth.login'))
+    if current_user.is_authenticated:
+        flash('You are already logged in!', 'info')
+        return redirect(url_for('main.index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        name = form.username.data
+        email = form.email.data
+        password = form.password.data
+        phonenumber = form.phone.data
+        default_role = Role.query.filter_by(name='Agent').first()
+        new_user = User(username=name, email=email, phone_no=phonenumber, password=bcrypt.generate_password_hash(password).decode('utf-8'), is_working=True)
+        new_user.roles.append(default_role)
+        db.session.add(new_user)
+        db.session.commit()
+        #return redirect(url_for('main.agent_view'))
+        return redirect(url_for('main.agent_view'))
+    return render_template('signup.html', form=form)
 
 @auth.route('/logout')
 @login_required

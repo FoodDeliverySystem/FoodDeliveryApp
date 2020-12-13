@@ -15,6 +15,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
+    phone = StringField('Phone', validators=[DataRequired(), Length(10)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=20)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
@@ -28,6 +29,11 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('That email is taken. Please choose a different one.')
+
+    def validate_phone_no(self, phone):
+        user = User.query.filter_by(phone_no=phone.data).first()
+        if user:
+            raise ValidationError('That phone number is taken. Please use a different one.')
 
 class OrderItemsForm(FlaskForm):
     status = SelectField('Status of Order', choices=OrderStatus.choices())
