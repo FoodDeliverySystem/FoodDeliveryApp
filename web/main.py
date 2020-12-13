@@ -5,6 +5,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, escape, 
 from flask_login import login_required, current_user
 from flask_user import roles_required
 from .forms import *
+from urllib.parse import quote
 
 main = Blueprint('main', __name__)
 
@@ -99,6 +100,20 @@ def detailed_order(order_id):
     # making the address url safe
     escaped_address = escape(complete_address)
     return render_template('agent_order_view.html', order=order, agent=current_user, escaped_address=escaped_address)
+
+@main.route("/plot_agent_route/<int:agent_id>")
+@roles_required('Agent')
+@login_required
+def plot_agent_route(agent_id):
+    orders = db.session.query(Order.cust_addr1, Order.cust_addr2, Order.cust_pincode).filter(Order.user_id == agent_id ,Order.status != OrderStatus.delivered).all()
+    gapi_prefix = 'https://www.google.com/maps/dir/?api=1&origin=My+Location&waypoints='
+    waypoints = ''
+    for order in orders:
+        order_address = quote(order.cust_addr1 + ' ' + order.cust_addr2 + ' ' + order.cust_pincode)
+        waypoints = waypoints + order_address + '|'
+    gapi_route = gapi_prefix + waypoints
+    #print("GMAPS API CALL:" + gapi_route)
+    return redirect(gapi_route)
 
 @main.route("/assign_view/<int:order_id>")
 @roles_required('Admin')
