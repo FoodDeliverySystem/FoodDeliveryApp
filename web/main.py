@@ -106,15 +106,16 @@ def detailed_order(order_id):
 @login_required
 def plot_agent_route(agent_id):
     orders = db.session.query(Order.cust_addr1, Order.cust_addr2, Order.cust_pincode).filter(Order.user_id == agent_id, Order.status != OrderStatus.delivered).all()
-    gapi_prefix = r'https://www.google.com/maps/dir/16651+Redmond+way,Redmond,+WA+98052/'
+    #gapi_prefix = r'https://www.google.com/maps/dir/16651+Redmond+way,Redmond,+WA+98052/'
+    gapi_prefix = r'https://www.google.com/maps/dir/?api=1&origin=16651+Redmond+way,Redmond,+WA+98052&waypoints='
     waypoints = ''
     for order in orders:
         order_address = order.cust_addr1 + ' '
         if order.cust_addr2:
             order_address = order_address + ' ' + order.cust_addr2
         order_address = order_address + order.cust_pincode
-        waypoints = waypoints + order_address + '/'
-    gapi_route = gapi_prefix + waypoints
+        waypoints = waypoints + order_address + '|'
+    gapi_route = gapi_prefix + quote(waypoints)
     #print("GMAPS API CALL:" + gapi_route)
     return redirect(gapi_route)
 
