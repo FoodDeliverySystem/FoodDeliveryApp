@@ -4,7 +4,7 @@ from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
 from wtforms import *
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-import phonenumbers
+#import phonenumbers
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from web.models import User, OrderStatus
@@ -45,18 +45,15 @@ class OrderItemsForm(FlaskForm):
     user_tip = FloatField('Tip', default=0)
     delivery_instructions = TextAreaField('Delivery Instructions',  render_kw={'class': 'form-control', 'rows': 5, 'cols':5}, validators=[Length(min=0, max=300)])
     submit = SubmitField('Add Order')
-    # delivery_date = DateField('Delivery Date', format='%Y-%m-%d',  validators=[DataRequired()])
-    # delivery_start_time = TimeField('Start Time')
-    # delivery_end_time = TimeField('End Time')
     
-    def validate_phone(form, field):
-        if len(field.data) > 16:
-            raise ValidationError('length should be less than 16')
-        try:
-            input_number = phonenumbers.parse(field.data)
-            if not (phonenumbers.is_valid_number(input_number)):
-                raise ValidationError('Invalid phone number.')
-        except:
-            input_number = phonenumbers.parse("+1"+field.data)
-            if not (phonenumbers.is_valid_number(input_number)):
-                raise ValidationError('failed validating with +1')
+    # def validate_phone(self, field):
+    #     if len(field.data) > 16:
+    #         raise ValidationError('length should be less than 16')
+    #     try:
+    #         input_number = phonenumbers.parse(field.data)
+    #         if not (phonenumbers.is_valid_number(input_number)):
+    #             raise ValidationError('Invalid phone number.')
+    #     except:
+    #         input_number = phonenumbers.parse("+1"+field.data)
+    #         if not (phonenumbers.is_valid_number(input_number)):
+    #             raise ValidationError('failed validating with +1')

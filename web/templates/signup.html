@@ -35,6 +35,7 @@
   <div class="container card">
     <form method="POST" action="">
       {{ form.hidden_tag() }}
+      {{ form.csrf_token }}
       <fieldset class="form-group">
         <legend class="border-bottom mb-4">Registration - Kanishka Delivery</legend>
         <div class="form-group">

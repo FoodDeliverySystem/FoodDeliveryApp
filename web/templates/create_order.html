@@ -1,10 +1,9 @@
 {% extends "admin_layout.html" %}
 {% block content %}
 <h1>Create Order</h1>
-<form action="/create_order" method="post" novalidate>
-
+<form method="post">
+  {{ form.hidden_tag() }}
   {{ form.csrf_token }}
-
   <p>
   <div class="form-group">
     {{ form.cust_name.label(class="form-control-label") }}
