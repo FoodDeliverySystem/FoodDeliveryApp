@@ -268,13 +268,13 @@ def agent_dorders():
     agent = User.query.get_or_404(current_user.id)
     return render_template('agent_dorders.html', orders=orders, agent=agent,title='List of Delivered Orders', page=page)
 
-def time_to_utc(datetime):
-    # add utc time zone if no time zone is set
-    if datetime.tzinfo is None:
-        datetime = datetime.replace(tzinfo=timezone('utc'))
-    # convert to utc time zone from whatever time zone the datetime is set to
-    utc_datetime = datetime.astimezone(timezone('utc')).replace(tzinfo=None)
-    return utc_datetime
+# def time_to_utc(datetime):
+#     # add utc time zone if no time zone is set
+#     if datetime.tzinfo is None:
+#         datetime = datetime.replace(tzinfo=timezone('utc'))
+#     # convert to utc time zone from whatever time zone the datetime is set to
+#     utc_datetime = datetime.astimezone(timezone('utc')).replace(tzinfo=None)
+#     return utc_datetime
 
 @main.route("/agent_tips", methods=['GET', 'POST'])
 @roles_required('Agent')
