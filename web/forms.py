@@ -43,9 +43,9 @@ class AgentTipForm(FlaskForm):
 
 class AdminTipForm(FlaskForm):
     #datetime.now(tz='US/Pacific').replace(tzinfo='UTC')
-    agent_id = SelectField('Agent ID', validators=[DataRequired()], choices=[])
+    agent_id = SelectField('Agent Name', validators=[DataRequired()], choices=[])
     start_date = DateField('From', format='%Y-%m-%d', validators=[DataRequired()], default=datetime.utcnow)
-    end_date = DateField('To', format='%Y-%m-%d',validators=[DataRequired()], default=datetime.utcnow)
+    end_date = DateField('To  ', format='%Y-%m-%d',validators=[DataRequired()], default=datetime.utcnow)
     submit = SubmitField('Calculate Tip')
 
 class OrderItemsForm(FlaskForm):
