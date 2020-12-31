@@ -124,6 +124,22 @@ def plot_agent_route(agent_id):
     #print("GMAPS API CALL:" + gapi_route)
     return redirect(gapi_route)
 
+@main.route("/plot_uo_route")
+@roles_required('Admin')
+@login_required
+def plot_uo_route():
+    orders = db.session.query(Order.cust_addr1, Order.cust_addr2, Order.cust_pincode).filter(Order.user_id == None).all()
+    gapi_prefix = r'https://www.google.com/maps/dir//'
+    waypoints = ''
+    for order in orders:
+        order_address = order.cust_addr1 + ' '
+        if order.cust_addr2:
+            order_address = order_address + ' ' + order.cust_addr2
+        order_address = order_address + order.cust_pincode
+        waypoints = waypoints + order_address + '/'
+    gapi_route = gapi_prefix + quote(waypoints)
+    return redirect(gapi_route)
+
 @main.route("/assign_view/<int:order_id>")
 @roles_required('Admin')
 @login_required
@@ -136,8 +152,16 @@ def assign_view(order_id):
 @login_required
 def assign_order(order_id, user_id):
     order = Order.query.get_or_404(order_id)
-    order.user_id = user_id
+    if user_id == 0:
+        order.user_id = None
+        flash('Order un-assigned successfully!', 'info')
+    else:
+        order.user_id = user_id
+        flash('Order assigned successfully!', 'success')
     db.session.commit()
+    if user_id == 0:
+        return redirect(url_for('main.unassigned_orders'))
+        # return redirect(url_for('main.agent', agent_id=user_id))
     return redirect(url_for('main.agent', agent_id=user_id))
 
 @main.route("/da_update_status/<int:agent_id>")

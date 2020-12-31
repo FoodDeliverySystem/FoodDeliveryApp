@@ -15,6 +15,16 @@
     </div>
   </div>
 </div>
+<!-- <a class="btn btn-dark btn" href="{{ url_for('main.assign_order', order_id=order_id, user_id=0) }}">Un-Assign Order</a> -->
+<!-- <div class="container card text-primary">
+  <a class="nav-item nav-link" href="{{ url_for('main.assign_order', order_id=order_id, user_id=0) }}">
+    <div class="row card-body">
+      <div class="col">
+        Un-Assign
+      </div>
+    </div>
+  </a>
+</div> -->
 {% for agent in agents %}
 {% if agent.is_working == True %}
 {% set status = 'Available' %}
@@ -36,4 +46,6 @@
   </a>
 </div>
 {% endfor %}
+<br>
+<a class="btn btn-dark btn" href="{{ url_for('main.assign_order', order_id=order_id, user_id=0) }}">Un-Assign Order</a>
 {% endblock content %}
