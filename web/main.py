@@ -281,14 +281,14 @@ def agent_tips():
     if tip_form.validate_on_submit():
         start_date = tip_form.start_date.data
         end_date = tip_form.end_date.data
-        res = db.session.query(func.sum(Order.user_tip).label('tip_sum'), func.count(Order.id).label('order_count')).filter(Order.user_id == current_user.id , Order.date >= start_date, Order.date <= end_date).first()
+        res = db.session.query(func.sum(Order.user_tip).label('tip_sum'), func.count(Order.id).label('order_count')).filter(Order.user_id == current_user.id, Order.date >= start_date, Order.date <= end_date).first()
+        print(res)
         tip_sum = res.tip_sum
         order_count = res.order_count
         if tip_sum:
             tip_sum = '{0:.3f}'.format(tip_sum)
         else:
             tip_sum = None
-            order_count = 0
         agent = User.query.get_or_404(current_user.id)
         return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=start_date, end_date=end_date, agent=agent, layout="agent_layout.html")
     return render_template('agent_tips.html', form=tip_form)
@@ -310,7 +310,6 @@ def admin_tips():
             tip_sum = '{0:.3f}'.format(tip_sum)
         else:
             tip_sum = None
-            order_count = 0
         agent = User.query.get_or_404(agent_id)
         return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=start_date, end_date=end_date, agent=agent, layout="admin_layout.html")
     return render_template('admin_tips.html', form=tip_form)

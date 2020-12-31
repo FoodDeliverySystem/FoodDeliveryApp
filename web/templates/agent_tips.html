@@ -6,19 +6,6 @@
 <form method="post">
   {{ form.hidden_tag() }}
   <div class="form-group">
-    {{ form.agent_id.label(class="form-control-label") }}
-    {% if form.agent_id.errors %}
-    {{ form.agent_id() }}
-    <div class="invalid-feedback">
-      {% for error in form.agent_id.errors %}
-      <span>{{ error }}</span>
-      {% endfor %}
-    </div>
-    {% else %}
-    {{ form.agent_id() }}
-    {% endif %}
-  </div>
-  <div class="form-group">
     {{ form.start_date.label(class="form-control-label") }}
     {% if form.start_date.errors %}
     {{ form.start_date() }}
