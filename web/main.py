@@ -6,7 +6,13 @@ from flask_login import login_required, current_user
 from flask_user import roles_required
 from .forms import *
 from urllib.parse import quote
+from sqlalchemy import func
 
+import time
+import datetime
+from pytz import timezone
+import calendar
+import pytz
 main = Blueprint('main', __name__)
 
 @app.errorhandler(403)
@@ -239,3 +245,53 @@ def agent_dorders():
     orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered, Order.user_id == current_user.id).order_by(Order.id.desc()).paginate(page=page, per_page=8)
     agent = User.query.get_or_404(current_user.id)
     return render_template('agent_dorders.html', orders=orders, agent=agent,title='List of Delivered Orders', page=page)
+
+def time_to_utc(datetime):
+    # add utc time zone if no time zone is set
+    if datetime.tzinfo is None:
+        datetime = datetime.replace(tzinfo=timezone('utc'))
+    # convert to utc time zone from whatever time zone the datetime is set to
+    utc_datetime = datetime.astimezone(timezone('utc')).replace(tzinfo=None)
+    return utc_datetime
+
+@main.route("/agent_tips", methods=['GET', 'POST'])
+@roles_required('Agent')
+@login_required
+def agent_tips():
+    tip_form = AgentTipForm()
+    if tip_form.validate_on_submit():
+        start_date = tip_form.start_date.data
+        end_date = tip_form.end_date.data
+        res = db.session.query(func.sum(Order.user_tip).label('tip_sum'), func.count(Order.id).label('order_count')).filter(Order.user_id == current_user.id , Order.date >= start_date, Order.date <= end_date).first()
+        tip_sum = res.tip_sum
+        order_count = res.order_count
+        if tip_sum:
+            tip_sum = '{0:.3f}'.format(tip_sum)
+        else:
+            tip_sum = None
+            order_count = 0
+        agent = User.query.get_or_404(current_user.id)
+        return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=start_date, end_date=end_date, agent=agent, layout="agent_layout.html")
+    return render_template('agent_tips.html', form=tip_form)
+
+@main.route("/admin_tips", methods=['GET', 'POST'])
+@roles_required('Admin')
+@login_required
+def admin_tips():
+    tip_form = AdminTipForm()
+    tip_form.agent_id.choices = [ (agent.id, agent.username) for agent in User.query.filter(User.id!=current_user.id).all() ]
+    if tip_form.validate_on_submit():
+        agent_id = tip_form.agent_id.data
+        start_date = tip_form.start_date.data
+        end_date = tip_form.end_date.data
+        res = db.session.query(func.sum(Order.user_tip).label('tip_sum'), func.count(Order.id).label('order_count')).filter(Order.user_id == agent_id, Order.date >= start_date, Order.date <= end_date).first()
+        tip_sum = res.tip_sum
+        order_count = res.order_count
+        if tip_sum:
+            tip_sum = '{0:.3f}'.format(tip_sum)
+        else:
+            tip_sum = None
+            order_count = 0
+        agent = User.query.get_or_404(agent_id)
+        return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=start_date, end_date=end_date, agent=agent, layout="admin_layout.html")
+    return render_template('admin_tips.html', form=tip_form)

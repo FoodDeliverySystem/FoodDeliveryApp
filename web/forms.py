@@ -5,11 +5,12 @@ from flask_login import current_user
 from wtforms import *
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 #import phonenumbers
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField, DateTimeField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from web.models import User, OrderStatus
 from wtforms.fields.html5 import *
 from datetime import datetime, date
+from pytz import timezone
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
@@ -35,11 +36,24 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('That phone number is taken. Please use a different one.')
 
+class AgentTipForm(FlaskForm):
+    #datetime.now(tz='US/Pacific').replace(tzinfo='UTC')
+    start_date = DateField('From', format='%Y-%m-%d', validators=[DataRequired()], default=datetime.utcnow)
+    end_date = DateField('To', format='%Y-%m-%d',validators=[DataRequired()], default=datetime.utcnow)
+    submit = SubmitField('Calculate Tip')
+
+class AdminTipForm(FlaskForm):
+    #datetime.now(tz='US/Pacific').replace(tzinfo='UTC')
+    agent_id = SelectField('Agent ID', validators=[DataRequired()], choices=[])
+    start_date = DateField('From', format='%Y-%m-%d', validators=[DataRequired()], default=datetime.utcnow)
+    end_date = DateField('To', format='%Y-%m-%d',validators=[DataRequired()], default=datetime.utcnow)
+    submit = SubmitField('Calculate Tip')
+
 class OrderItemsForm(FlaskForm):
     status = SelectField('Status of Order', choices=OrderStatus.choices())
     cust_name = StringField('Customer Name', validators=[DataRequired(), Length(min=3, max=30)])
     phone = StringField('Phone', validators=[DataRequired(), Length(10)])
-    cust_addr1 = TextAreaField('Address Line 1', validators=[DataRequired(), Length(min=5, max=65)],  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
+    cust_addr1 = TextAreaField('Address Line 1', validators=[DataRequired(), Length(min=5, max=65)], render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
     cust_addr2 = TextAreaField('Address Line 2', validators=[Length(min=0, max=65)],  render_kw={'class': 'form-control', 'rows': 5, 'cols':5})
     cust_pincode = StringField('Pin Code', validators=[DataRequired(), Length(min=5, max=12)])
     user_tip = FloatField('Tip', default=0)
