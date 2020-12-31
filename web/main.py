@@ -10,9 +10,7 @@ from sqlalchemy import func
 
 import time
 import datetime
-from pytz import timezone
 import calendar
-import pytz
 main = Blueprint('main', __name__)
 
 @app.errorhandler(403)

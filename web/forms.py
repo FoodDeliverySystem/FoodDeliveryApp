@@ -10,7 +10,6 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from web.models import User, OrderStatus
 from wtforms.fields.html5 import *
 from datetime import datetime, date
-from pytz import timezone
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
