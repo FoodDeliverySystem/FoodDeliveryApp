@@ -159,10 +159,7 @@ def assign_order(order_id, user_id):
         order.user_id = user_id
         flash('Order assigned successfully!', 'success')
     db.session.commit()
-    if user_id == 0:
-        return redirect(url_for('main.unassigned_orders'))
-        # return redirect(url_for('main.agent', agent_id=user_id))
-    return redirect(url_for('main.agent', agent_id=user_id))
+    return redirect(url_for('main.unassigned_orders'))
 
 @main.route("/da_update_status/<int:agent_id>")
 @login_required
