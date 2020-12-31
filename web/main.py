@@ -205,7 +205,7 @@ def update_order_status_agent(order_id, status_option):
 def create_order():
     create_order_form = OrderItemsForm()
     if create_order_form.validate_on_submit(): 
-        new_order = Order(status=create_order_form.status.data, cust_name=create_order_form.cust_name.data, phone=create_order_form.phone.data,cust_addr1=create_order_form.cust_addr1.data, cust_addr2=create_order_form.cust_addr2.data,cust_pincode=create_order_form.cust_pincode.data, delivery_instructions=create_order_form.delivery_instructions.data,user_tip=create_order_form.user_tip.data)
+        new_order = Order(status=create_order_form.status.data, cust_name=create_order_form.cust_name.data, phone=create_order_form.phone.data,cust_addr1=create_order_form.cust_addr1.data, cust_addr2=create_order_form.cust_addr2.data, cust_pincode=create_order_form.cust_pincode.data.strip(), delivery_instructions=create_order_form.delivery_instructions.data,user_tip=create_order_form.user_tip.data)
         db.session.add(new_order)
         db.session.commit()
         flash('Order created successfully!', 'success')
