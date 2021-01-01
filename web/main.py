@@ -206,9 +206,6 @@ def create_order():
     create_order_form = OrderItemsForm()
     if create_order_form.validate_on_submit(): 
         new_order = Order(status=create_order_form.status.data, cust_name=create_order_form.cust_name.data, phone=create_order_form.phone.data, cust_addr1=create_order_form.cust_addr1.data, cust_addr2=create_order_form.cust_addr2.data, cust_pincode=create_order_form.cust_pincode.data.strip(), delivery_instructions=create_order_form.delivery_instructions.data, user_tip=create_order_form.user_tip.data, drinks=create_order_form.drinks.data)
-        print("Hi hi hi hi ")
-        print(create_order_form.drinks.data)
-        print("bye bye bye")
         db.session.add(new_order)
         db.session.commit()
         flash('Order created successfully!', 'success')
@@ -222,7 +219,7 @@ def edit_order(order_id):
     order = Order.query.get_or_404(order_id)
     order.status=OrderStatus(order.status).name
     edit_order_form = OrderItemsForm(obj=order)
-    if edit_order_form.validate_on_submit(): 
+    if edit_order_form.validate_on_submit():
         update_existing_order(order, edit_order_form)
         db.session.commit()
         flash('Order updated successfully!', 'success')
@@ -251,6 +248,7 @@ def update_existing_order(order, form):
     order.cust_pincode = form.cust_pincode.data
     order.delivery_instructions = form.delivery_instructions.data
     order.user_tip = form.user_tip.data
+    order.drinks = form.drinks.data
 
 @main.route("/agent_view")
 @login_required
