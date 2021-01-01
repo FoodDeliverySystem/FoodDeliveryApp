@@ -57,7 +57,7 @@ class OrderItemsForm(FlaskForm):
     cust_pincode = StringField('Pin Code', validators=[DataRequired(), Length(min=5, max=12)])
     user_tip = FloatField('Tip', default=0)
     delivery_instructions = TextAreaField('Delivery Instructions',  render_kw={'class': 'form-control', 'rows': 5, 'cols':5}, validators=[Length(min=0, max=300)])
-    drinks = remember_me = BooleanField('Drinks')
+    drinks = BooleanField('Drinks')
     submit = SubmitField('Add Order')
     
     # def validate_phone(self, field):
