@@ -77,3 +77,5 @@ class Order(db.Model, UserMixin):
     cust_pincode = db.Column(db.String(12), nullable=False)
     #Delivery Details
     delivery_instructions = db.Column(db.String(300), nullable=True)
+    #Drinks
+    drinks = db.Column(db.Boolean, nullable=False, default=False)
