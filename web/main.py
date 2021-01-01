@@ -57,7 +57,7 @@ def agent(agent_id):
 def current_orders():
     page = request.args.get('page', 1 , type=int)
     orders = db.session.query(Order).filter(Order.status != OrderStatus.delivered).order_by(Order.id).paginate(page=page, per_page=8)
-    return render_template('orders_list.html', orders=orders, title='List of Open Orders', base_func='current_orders')
+    return render_template('orders_list.html', orders=orders, title='List of Open Orders', base_func='current_orders', delivery_status= OrderStatus.delivered)
 
 @main.route("/delivered_orders", methods=['GET'])
 @roles_required('Admin')
@@ -66,7 +66,7 @@ def delivered_orders():
     page = request.args.get('page', 1 , type=int)
     # Delivered orders need to be in descending
     orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered).order_by(Order.id.desc()).paginate(page=page, per_page=8)
-    return render_template('orders_list.html', orders=orders, title='List of Delivered Orders', base_func='delivered_orders')
+    return render_template('orders_list.html', orders=orders, title='List of Delivered Orders', base_func='delivered_orders', delivery_status= OrderStatus.delivered)
 
 @main.route("/unassigned_orders", methods=['GET'])
 @roles_required('Admin')
@@ -82,7 +82,7 @@ def pin_orders(pin):
     page = request.args.get('page', 1 , type=int)
     orders = db.session.query(Order).filter(Order.user_id == None, Order.status != OrderStatus.delivered, Order.cust_pincode == pin).order_by(Order.id).paginate(page=page, per_page=8)
     title = "Orders in " + pin
-    return render_template('orders_list.html', orders=orders, title=title, base_func='pin_orders')
+    return render_template('orders_list.html', orders=orders, title=title, base_func='pin_orders', delivery_status= OrderStatus.delivered)
 
 @main.route("/order/<int:order_id>", methods=['GET'])
 @roles_required('Admin')
@@ -103,7 +103,7 @@ def detailed_order(order_id):
     complete_address = complete_address + ' ' + order.cust_pincode
     # making the address url safe
     escaped_address = escape(complete_address)
-    return render_template('agent_order_view.html', order=order, agent=current_user, escaped_address=escaped_address)
+    return render_template('agent_order_view.html', order=order, agent=current_user, escaped_address=escaped_address, delivery_status= OrderStatus.delivered)
 
 @main.route("/plot_agent_route/<int:agent_id>")
 @roles_required('Agent')
@@ -205,7 +205,10 @@ def update_order_status_agent(order_id, status_option):
 def create_order():
     create_order_form = OrderItemsForm()
     if create_order_form.validate_on_submit(): 
-        new_order = Order(status=create_order_form.status.data, cust_name=create_order_form.cust_name.data, phone=create_order_form.phone.data, cust_addr1=create_order_form.cust_addr1.data, cust_addr2=create_order_form.cust_addr2.data, cust_pincode=create_order_form.cust_pincode.data.strip(), delivery_instructions=create_order_form.delivery_instructions.data, user_tip=create_order_form.user_tip.data)
+        new_order = Order(status=create_order_form.status.data, cust_name=create_order_form.cust_name.data, phone=create_order_form.phone.data, cust_addr1=create_order_form.cust_addr1.data, cust_addr2=create_order_form.cust_addr2.data, cust_pincode=create_order_form.cust_pincode.data.strip(), delivery_instructions=create_order_form.delivery_instructions.data, user_tip=create_order_form.user_tip.data, drinks=create_order_form.drinks.data)
+        print("Hi hi hi hi ")
+        print(create_order_form.drinks.data)
+        print("bye bye bye")
         db.session.add(new_order)
         db.session.commit()
         flash('Order created successfully!', 'success')
@@ -254,7 +257,7 @@ def update_existing_order(order, form):
 def agent_view():
     page = request.args.get('page', 1 , type=int)
     orders = db.session.query(Order).filter(Order.user_id == current_user.id ,Order.status != OrderStatus.delivered).paginate(page=page, per_page=8)
-    return render_template('agent_assigned_orders_view.html', agent=current_user, orders = orders, page=page)
+    return render_template('agent_assigned_orders_view.html', agent=current_user, orders = orders, page=page, delivery_status= OrderStatus.delivered)
 
 @main.route("/agent_dorders", methods=['GET'])
 @roles_required('Agent')
@@ -263,7 +266,7 @@ def agent_dorders():
     page = request.args.get('page', 1 , type=int)
     orders = db.session.query(Order).filter(Order.status == OrderStatus.delivered, Order.user_id == current_user.id).order_by(Order.id.desc()).paginate(page=page, per_page=8)
     agent = User.query.get_or_404(current_user.id)
-    return render_template('agent_dorders.html', orders=orders, agent=agent,title='List of Delivered Orders', page=page)
+    return render_template('agent_dorders.html', orders=orders, agent=agent,title='List of Delivered Orders', page=page, delivery_status= OrderStatus.delivered)
 
 # def time_to_utc(datetime):
 #     # add utc time zone if no time zone is set
