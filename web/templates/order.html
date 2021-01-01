@@ -44,6 +44,9 @@
       <div class="col">
         Tip
       </div>
+      <div class="col">
+        Drinks
+      </div>
     </div>
   </div>
   <div class="container card">
@@ -62,6 +65,9 @@
           $0
           {% endif %}
         </span>
+      </div>
+      <div class="col">
+        <span class="badge badge-dark">{{ 'Yes' if order.drinks }}{{ 'No' if not order.drinks }}</span>
       </div>
     </div>
   </div>

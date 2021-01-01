@@ -78,6 +78,21 @@
   </div>
   </p>
   <p>
+    <div class="form-group">
+     
+      {% if form.drinks.errors %}
+      {{ form.drinks(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+        {% for error in form.drinks.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.drinks() }} {{ form.drinks.label(class="form-control-label") }} 
+      {% endif %}
+    </div>
+    </p>
+  <p>
   <div class="form-group">
     {{ form.delivery_instructions.label(class="form-control-label") }}
     {% if form.delivery_instructions.errors %}

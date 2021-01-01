@@ -41,6 +41,9 @@
     <div class="col">
       Status
     </div>
+    <div class="col">
+      Drinks
+    </div>
   </div>
 </div>
 {% for order in orders %}
@@ -55,6 +58,9 @@
       </div>
       <div class="col">
         <span class="badge badge-dark">{{ order.status }}</span>
+      </div>
+      <div class="col">
+        <span class="badge badge-dark">{{ 'Yes' if order.drinks }}{{ 'No' if not order.drinks }}</span>
       </div>
     </div>
   </a>
