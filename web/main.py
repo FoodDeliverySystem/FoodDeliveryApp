@@ -9,8 +9,8 @@ from urllib.parse import quote
 from sqlalchemy import func
 
 import time
-import datetime
-import calendar
+from datetime import datetime, timedelta
+
 main = Blueprint('main', __name__)
 
 @app.errorhandler(403)
@@ -265,14 +265,6 @@ def agent_dorders():
     agent = User.query.get_or_404(current_user.id)
     return render_template('agent_dorders.html', orders=orders, agent=agent,title='List of Delivered Orders', page=page)
 
-# def time_to_utc(datetime):
-#     # add utc time zone if no time zone is set
-#     if datetime.tzinfo is None:
-#         datetime = datetime.replace(tzinfo=timezone('utc'))
-#     # convert to utc time zone from whatever time zone the datetime is set to
-#     utc_datetime = datetime.astimezone(timezone('utc')).replace(tzinfo=None)
-#     return utc_datetime
-
 @main.route("/agent_tips", methods=['GET', 'POST'])
 @roles_required('Agent')
 @login_required
@@ -281,8 +273,10 @@ def agent_tips():
     if tip_form.validate_on_submit():
         start_date = tip_form.start_date.data
         end_date = tip_form.end_date.data
+        if start_date == end_date:
+            start_date = start_date - timedelta(days=1)
+            flash('Start and end date are the same, decreasing start date by one.', 'info')
         res = db.session.query(func.sum(Order.user_tip).label('tip_sum'), func.count(Order.id).label('order_count')).filter(Order.user_id == current_user.id, Order.date >= start_date, Order.date <= end_date).first()
-        print(res)
         tip_sum = res.tip_sum
         order_count = res.order_count
         if tip_sum:
@@ -303,6 +297,9 @@ def admin_tips():
         agent_id = tip_form.agent_id.data
         start_date = tip_form.start_date.data
         end_date = tip_form.end_date.data
+        if start_date == end_date:
+            start_date = start_date - timedelta(days=1)
+            flash('Start and end date are the same, decreasing start date by one.', 'info')
         res = db.session.query(func.sum(Order.user_tip).label('tip_sum'), func.count(Order.id).label('order_count')).filter(Order.user_id == agent_id, Order.date >= start_date, Order.date <= end_date).first()
         tip_sum = res.tip_sum
         order_count = res.order_count
