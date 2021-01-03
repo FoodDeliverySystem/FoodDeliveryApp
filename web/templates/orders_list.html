@@ -16,7 +16,7 @@
     <div class="col col-sm-3">
       Tip
     </div>
-    <div class="col col-sm-2">
+    <div class="col col-xs-2">
       Drinks
     </div>
     <!-- <div class="col">
@@ -26,7 +26,7 @@
 </div>
 {% if orders %}
 {% for order in orders.items %}
- <div class="container card {{ 'row-bg' if order.status == delivery_status }} ">  <!-- " base_func == 'delivered_orders'}} ">-->
+<div class="container card {{ 'row-bg' if order.status == delivery_status }} ">  <!-- " base_func == 'delivered_orders'}} ">-->
   <a class="nav-item nav-link" href="{{ url_for('main.order', order_id=order.id) }}">
     <div class="row card-body">
       <div class="col col-sm-2">
@@ -38,7 +38,7 @@
       <div class="col col-sm-3">
         <span class="badge badge-dark">$ {{ order.user_tip }}</span>
       </div>
-      <div class="col col-sm-2">
+      <div class="col col-xs-2">
         <span class="badge badge-dark">{{ 'Yes' if order.drinks }}{{ 'No' if not order.drinks }}</span>
       </div>
       <!-- <div class="col">
