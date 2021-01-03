@@ -11,6 +11,8 @@ from web.models import User, OrderStatus
 from wtforms.fields.html5 import *
 from datetime import datetime, date
 
+import pytz
+
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',
@@ -36,16 +38,14 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('That phone number is taken. Please use a different one.')
 
 class AgentTipForm(FlaskForm):
-    #datetime.now(tz='US/Pacific').replace(tzinfo='UTC')
-    start_date = DateField('From', format='%Y-%m-%d', validators=[DataRequired()], default=datetime.utcnow)
-    end_date = DateField('To', format='%Y-%m-%d',validators=[DataRequired()], default=datetime.utcnow)
+    start_date = DateField('From', format='%Y-%m-%d', validators=[DataRequired()], default=datetime.now(tz=pytz.timezone('US/Pacific')))
+    end_date = DateField('To', format='%Y-%m-%d', validators=[DataRequired()], default=datetime.now(tz=pytz.timezone('US/Pacific')))
     submit = SubmitField('Calculate Tip')
 
 class AdminTipForm(FlaskForm):
-    #datetime.now(tz='US/Pacific').replace(tzinfo='UTC')
     agent_id = SelectField('Agent Name', validators=[DataRequired()], choices=[])
-    start_date = DateField('From', format='%Y-%m-%d', validators=[DataRequired()], default=datetime.utcnow)
-    end_date = DateField('To  ', format='%Y-%m-%d',validators=[DataRequired()], default=datetime.utcnow)
+    start_date = DateField('From', format='%Y-%m-%d', validators=[DataRequired()], default=datetime.now(tz=pytz.timezone('US/Pacific')))
+    end_date = DateField('To', format='%Y-%m-%d', validators=[DataRequired()], default=datetime.now(tz=pytz.timezone('US/Pacific')))
     submit = SubmitField('Calculate Tip')
 
 class OrderItemsForm(FlaskForm):

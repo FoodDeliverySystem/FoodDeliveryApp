@@ -7,10 +7,11 @@ from flask_user import roles_required
 from .forms import *
 from urllib.parse import quote
 from sqlalchemy import func
-
 import time
-import datetime
-import calendar
+from datetime import datetime, timedelta
+
+from pytz import timezone
+import pytz
 main = Blueprint('main', __name__)
 
 @app.errorhandler(403)
@@ -266,13 +267,12 @@ def agent_dorders():
     agent = User.query.get_or_404(current_user.id)
     return render_template('agent_dorders.html', orders=orders, agent=agent,title='List of Delivered Orders', page=page, delivery_status= OrderStatus.delivered)
 
-# def time_to_utc(datetime):
-#     # add utc time zone if no time zone is set
-#     if datetime.tzinfo is None:
-#         datetime = datetime.replace(tzinfo=timezone('utc'))
-#     # convert to utc time zone from whatever time zone the datetime is set to
-#     utc_datetime = datetime.astimezone(timezone('utc')).replace(tzinfo=None)
-#     return utc_datetime
+def time_to_datetime(time, from_tz='US/Pacific', to_tz='UTC'):
+    # converts datetime.time to datetime obj
+    time = datetime.combine(time, datetime.min.time(), tzinfo=timezone(from_tz))
+    # change timezone
+    # time = time.astimezone(timezone(to_tz))
+    return time
 
 @main.route("/agent_tips", methods=['GET', 'POST'])
 @roles_required('Agent')
@@ -280,10 +280,10 @@ def agent_dorders():
 def agent_tips():
     tip_form = AgentTipForm()
     if tip_form.validate_on_submit():
-        start_date = tip_form.start_date.data
-        end_date = tip_form.end_date.data
+        # From 12:00 AM of start date to 11:59 PM of end date
+        start_date = time_to_datetime(tip_form.start_date.data).replace(hour=0, minute=0)
+        end_date = time_to_datetime(tip_form.end_date.data).replace(hour=23, minute=59)
         res = db.session.query(func.sum(Order.user_tip).label('tip_sum'), func.count(Order.id).label('order_count')).filter(Order.user_id == current_user.id, Order.date >= start_date, Order.date <= end_date).first()
-        print(res)
         tip_sum = res.tip_sum
         order_count = res.order_count
         if tip_sum:
@@ -291,6 +291,7 @@ def agent_tips():
         else:
             tip_sum = None
         agent = User.query.get_or_404(current_user.id)
+        flash('Calculated from 12:00 AM PST of start date to 11:59 PM PST of end date.', 'info')
         return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=start_date, end_date=end_date, agent=agent, layout="agent_layout.html")
     return render_template('agent_tips.html', form=tip_form)
 
@@ -302,8 +303,9 @@ def admin_tips():
     tip_form.agent_id.choices = [ (agent.id, agent.username) for agent in User.query.filter(User.id!=current_user.id).all() ]
     if tip_form.validate_on_submit():
         agent_id = tip_form.agent_id.data
-        start_date = tip_form.start_date.data
-        end_date = tip_form.end_date.data
+        # From 12:00 AM of start date to 11:59 PM of end date
+        start_date = time_to_datetime(tip_form.start_date.data).replace(hour=0, minute=0)
+        end_date = time_to_datetime(tip_form.end_date.data).replace(hour=23, minute=59)
         res = db.session.query(func.sum(Order.user_tip).label('tip_sum'), func.count(Order.id).label('order_count')).filter(Order.user_id == agent_id, Order.date >= start_date, Order.date <= end_date).first()
         tip_sum = res.tip_sum
         order_count = res.order_count
@@ -312,5 +314,6 @@ def admin_tips():
         else:
             tip_sum = None
         agent = User.query.get_or_404(agent_id)
+        flash('Calculated from 12:00 AM PST of start date to 11:59 PM PST of end date.', 'info')
         return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=start_date, end_date=end_date, agent=agent, layout="admin_layout.html")
     return render_template('admin_tips.html', form=tip_form)
