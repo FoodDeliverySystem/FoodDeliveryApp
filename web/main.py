@@ -7,7 +7,6 @@ from flask_user import roles_required
 from .forms import *
 from urllib.parse import quote
 from sqlalchemy import func
-
 import time
 from datetime import datetime, timedelta
 
@@ -271,11 +270,12 @@ def agent_dorders():
 def agent_tips():
     tip_form = AgentTipForm()
     if tip_form.validate_on_submit():
-        start_date = tip_form.start_date.data
-        end_date = tip_form.end_date.data
-        if start_date == end_date:
-            start_date = start_date - timedelta(days=1)
-            flash('Start and end date are the same, decreasing start date by one.', 'info')
+        # input Date is in PST, converting to UTC
+        # PST is -8 GMT, so adding + 8 
+        start_date = tip_form.start_date.data + timedelta(hours=8)
+        # Adding 23h,59m to get the whole day
+        end_date = tip_form.end_date.data + timedelta(hours=31, minutes=59)
+        flash('Calculated from 12:00 AM of start date to 11:59 PM PST of end date.', 'info')
         res = db.session.query(func.sum(Order.user_tip).label('tip_sum'), func.count(Order.id).label('order_count')).filter(Order.user_id == current_user.id, Order.date >= start_date, Order.date <= end_date).first()
         tip_sum = res.tip_sum
         order_count = res.order_count
@@ -284,7 +284,7 @@ def agent_tips():
         else:
             tip_sum = None
         agent = User.query.get_or_404(current_user.id)
-        return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=start_date, end_date=end_date, agent=agent, layout="agent_layout.html")
+        return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=tip_form.start_date.data, end_date=tip_form.end_date.data, agent=agent, layout="agent_layout.html")
     return render_template('agent_tips.html', form=tip_form)
 
 @main.route("/admin_tips", methods=['GET', 'POST'])
@@ -295,11 +295,12 @@ def admin_tips():
     tip_form.agent_id.choices = [ (agent.id, agent.username) for agent in User.query.filter(User.id!=current_user.id).all() ]
     if tip_form.validate_on_submit():
         agent_id = tip_form.agent_id.data
-        start_date = tip_form.start_date.data
-        end_date = tip_form.end_date.data
-        if start_date == end_date:
-            start_date = start_date - timedelta(days=1)
-            flash('Start and end date are the same, decreasing start date by one.', 'info')
+        # input Date is in PST, converting to UTC
+        # PST is -8 GMT, so adding + 8 
+        start_date = tip_form.start_date.data + timedelta(hours=8)
+        # Adding 23h,59m to get the whole day
+        end_date = tip_form.end_date.data + timedelta(hours=31, minutes=59)
+        flash('Calculated from 12:00 AM of start date to 11:59 PM PST of end date.', 'info')
         res = db.session.query(func.sum(Order.user_tip).label('tip_sum'), func.count(Order.id).label('order_count')).filter(Order.user_id == agent_id, Order.date >= start_date, Order.date <= end_date).first()
         tip_sum = res.tip_sum
         order_count = res.order_count
@@ -308,5 +309,5 @@ def admin_tips():
         else:
             tip_sum = None
         agent = User.query.get_or_404(agent_id)
-        return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=start_date, end_date=end_date, agent=agent, layout="admin_layout.html")
+        return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=tip_form.start_date.data, end_date=tip_form.end_date.data, agent=agent, layout="admin_layout.html")
     return render_template('admin_tips.html', form=tip_form)
