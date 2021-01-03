@@ -5,7 +5,7 @@
   List of Delivery Agents
 </div>
 <br>
-<div class="container card text-left text-white bg-dark">
+<div class="card text-left text-white bg-dark">
   <div class="row card-body">
     <div class="col">
       Agent Name
@@ -23,7 +23,7 @@
 {% set status = 'Un-Available' %}
 {% set badge_type = 'danger' %}
 {% endif %}
-<div class="container card text-primary">
+<div class="card text-primary">
   <a class="nav-item nav-link" href="{{ url_for('main.agent', agent_id=agent.id) }}">
     <div class="row card-body">
       <div class="col">

@@ -5,7 +5,7 @@
   {{ title }}
 </div>
 <br>
-<div class="container card text-left text-white bg-dark">
+<div class="card text-left text-white bg-dark">
   <div class="row card-body">
     <div class="col col-sm-2">
       ID
@@ -33,7 +33,7 @@
         {{ order.id }}
       </div>
       <div class="col col-sm-5">
-        {{ order.cust_name }}
+        {{ order.cust_name | title }}
       </div>
       <div class="col col-sm-3">
         <span class="badge badge-dark">$ {{ order.user_tip }}</span>

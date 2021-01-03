@@ -14,7 +14,7 @@
   {{ title }}
 </div>
 <br>
-<div class="container card text-left text-white bg-dark">
+<div class="card text-left text-white bg-dark">
   <div class="row card-body">
     <div class="col">
       Order ID
@@ -32,14 +32,14 @@
 </div>
 {% if orders %}
 {% for order in orders.items %}
-<div class="container card  {{ 'row-bg' if order.status == delivery_status }}">
+<div class="card  {{ 'row-bg' if order.status == delivery_status }}">
   <a class="nav-item nav-link" href="{{ url_for('main.detailed_order', order_id=order.id) }}">
     <div class="row card-body">
       <div class="col">
         {{ order.id }}
       </div>
       <div class="col">
-        {{ order.cust_name }}
+        {{ order.cust_name | title }}
       </div>
       <div class="col">
         <span class="badge badge-dark">{{ order.status }}</span>
