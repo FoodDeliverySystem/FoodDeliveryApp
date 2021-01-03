@@ -7,16 +7,16 @@
 <br>
 <div class="container card text-left text-white bg-dark">
   <div class="row card-body">
-    <div class="col">
+    <div class="col col-sm-2">
       ID
     </div>
     <div class="col">
       Name
     </div>
-    <div class="col col-sm">
+    <div class="col col-sm-3">
       Tip
     </div>
-    <div class="col col-sm">
+    <div class="col col-sm-2">
       Drinks
     </div>
     <!-- <div class="col">
@@ -29,20 +29,20 @@
  <div class="container card {{ 'row-bg' if order.status == delivery_status }} ">  <!-- " base_func == 'delivered_orders'}} ">-->
   <a class="nav-item nav-link" href="{{ url_for('main.order', order_id=order.id) }}">
     <div class="row card-body">
-      <div class="col">
+      <div class="col col-sm-2">
         {{ order.id }}
       </div>
       <div class="col">
         {{ order.cust_name }}
       </div>
-      <div class="col col-sm">
+      <div class="col col-sm-3">
         <span class="badge badge-dark">$ {{ order.user_tip }}</span>
       </div>
-      <div class="col col-sm">
+      <div class="col col-sm-2">
         <span class="badge badge-dark">{{ 'Yes' if order.drinks }}{{ 'No' if not order.drinks }}</span>
       </div>
       <!-- <div class="col">
-       <div class="form-check">
+        <div class="form-check">
         <input class="form-check-input checkbox-2x" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
       </div> 
     </div> -->
