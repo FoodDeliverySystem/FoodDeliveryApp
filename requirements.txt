@@ -52,3 +52,4 @@ WTForms==2.3.3
 WTForms-Alchemy==0.17.0
 WTForms-Components==0.10.4
 flask-talisman==0.7.0
+pytz==2020.4

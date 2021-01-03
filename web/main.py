@@ -290,7 +290,7 @@ def agent_tips():
         else:
             tip_sum = None
         agent = User.query.get_or_404(current_user.id)
-        flash('Calculated from 12:00 AM of start date to 11:59 PM PST of end date.', 'info')
+        flash('Calculated from 12:00 AM PST of start date to 11:59 PM PST of end date.', 'info')
         return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=start_date, end_date=end_date, agent=agent, layout="agent_layout.html")
     return render_template('agent_tips.html', form=tip_form)
 
@@ -313,6 +313,6 @@ def admin_tips():
         else:
             tip_sum = None
         agent = User.query.get_or_404(agent_id)
-        flash('Calculated from 12:00 AM of start date to 11:59 PM PST of end date.', 'info')
+        flash('Calculated from 12:00 AM PST of start date to 11:59 PM PST of end date.', 'info')
         return render_template('tips.html', tip_sum=tip_sum, order_count=order_count, start_date=start_date, end_date=end_date, agent=agent, layout="admin_layout.html")
     return render_template('admin_tips.html', form=tip_form)
