@@ -7,11 +7,11 @@
 <br>
 <div class="container card text-left text-white bg-dark">
   <div class="row card-body">
-    <div class="col-md">
-      Order ID
+    <div class="col">
+      ID
     </div>
     <div class="col">
-      Customer
+      Name
     </div>
     <div class="col-sm">
       Tip
@@ -29,7 +29,7 @@
  <div class="container card {{ 'row-bg' if order.status == delivery_status }} ">  <!-- " base_func == 'delivered_orders'}} ">-->
   <a class="nav-item nav-link" href="{{ url_for('main.order', order_id=order.id) }}">
     <div class="row card-body">
-      <div class="col-md">
+      <div class="col">
         {{ order.id }}
       </div>
       <div class="col">
