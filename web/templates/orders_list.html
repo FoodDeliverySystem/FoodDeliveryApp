@@ -1,5 +1,80 @@
 {% extends "admin_layout.html" %}
+
+
+
 {% block content %}
+
+<script src="{{ url_for('static',filename='buttonStatus.js') }}"></script>
+<script>
+
+  function assignOrders() {
+    var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:checked');
+    var ordersList = []
+    for (var checkbox of markedCheckbox) {
+      // console.log(checkbox.value + ' ');
+      ordersList.push(checkbox.value);
+    }
+    var agent = document.getElementById("selectAgent");
+    var agent_id = agent.options[agent.selectedIndex].value
+    console.log("Orders List : " + ordersList)
+    $.ajax({
+      type: "POST",
+      contentType: "application/json;charset=utf-8",
+      url: "{{ url_for('main.assign_multiple_orders') }}",
+      traditional: "true",
+      data: JSON.stringify({ "orderId": ordersList, "agentId": agent_id }),
+      dataType: "json",
+      success: function (response) {
+        if (response.redirect) {
+          window.location.href = response.redirect;
+        }
+      }
+    });
+  }
+
+  function deleteOrders() {
+    var result = confirm("Are you sure to delete?");
+    if (result) {
+       var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:checked');
+    var ordersList = []
+    for (var checkbox of markedCheckbox) {
+      // console.log(checkbox.value + ' ');
+      ordersList.push(checkbox.value);
+    }
+    var agent = document.getElementById("selectAgent");
+    var agent_id = agent.options[agent.selectedIndex].value
+    console.log("Orders List : " + ordersList)
+    $.ajax({
+      type: "POST",
+      contentType: "application/json;charset=utf-8",
+      url: "{{ url_for('main.delete_multiple_orders') }}",
+      traditional: "true",
+      data: JSON.stringify({ "orderId": ordersList}),
+      dataType: "json",
+      success: function (response) {
+        if (response.redirect) {
+          window.location.href = response.redirect;
+        }
+      }
+    });
+    }
+   
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  async function myFunc() {
+    var delay = 3500;
+    console.log('Sleeping for ' + delay + ' ms...')
+    await sleep(delay);
+    console.log('Sleep done, moving on.')
+    alert("HI");
+  }
+
+
+</script>
+
 <br>
 <div class="text-black text-center">
   {{ title }}
@@ -19,14 +94,15 @@
     <div class="col col-xs-2">
       Drinks
     </div>
-    <!-- <div class="col">
-      
-    </div> -->
+    <div class="col">
+
+    </div>
   </div>
 </div>
 {% if orders %}
 {% for order in orders.items %}
-<div class="card {{ 'row-bg' if order.status == delivery_status }} ">  <!-- " base_func == 'delivered_orders'}} ">-->
+<div class="card {{ 'row-bg' if order.status == delivery_status }} ">
+  <!-- " base_func == 'delivered_orders'}} ">-->
   <a class="nav-item nav-link" href="{{ url_for('main.order', order_id=order.id) }}">
     <div class="row card-body">
       <div class="col col-sm-2">
@@ -41,15 +117,34 @@
       <div class="col col-xs-2">
         <span class="badge badge-dark">{{ 'Yes' if order.drinks }}{{ 'No' if not order.drinks }}</span>
       </div>
-      <!-- <div class="col">
+      <div class="col">
         <div class="form-check">
-        <input class="form-check-input checkbox-2x" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-      </div> 
-    </div> -->
+          <input name="checkbox" class="checkbox form-check-input checkbox-2x" type="checkbox" id="checkbox"
+            value="{{ order.id }}" aria-label="..." autocomplete="off">
+        </div>
+      </div>
     </div>
   </a>
 </div>
 {% endfor %}
+{% if agents %}
+<div class="bd-example">
+  <label for="exampleFormControlSelect1">Agent Name</label>
+  <select name="selectAgent" class="form-control col-sm-4" id="selectAgent">
+    {% for agent in agents %}
+    <option value="{{ agent.id }}">{{ agent.username }}</option>
+    {% endfor %}
+  </select>
+<br>
+ <button  onclick="assignOrders()" name="assignOrders" id="assignOrders" type="button"
+    class="assignOrders btn btn-primary">Assign Orders</button> 
+    <button  onclick="deleteOrders()" name="deleteOrders" id="deleteOrders" type="button"
+    class="deleteOrders btn btn-danger">Delete Orders</button>
+
+</div>
+
+{% endif %}
+
 {% else %}
 <br><br>
 <div class="text-center font-weight-bold">
@@ -65,32 +160,34 @@
   <a class="btn btn-info mb-4" href="{{ url_for('main.delivered_orders', page=page_num) }}">{{ page_num }}</a>
   {% else %}
   <a class="btn btn-outline-info mb-4" href="{{ url_for('main.delivered_orders', page=page_num) }}">{{ page_num }}</a>
-          {% endif %}
-        {% else %}
-        {% endif%}
-      {% endfor %}
-    {% elif base_func == 'current_orders'%}
-      {% for page_num in orders.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-        {% if page_num %}
-          {% if orders.page == page_num %}
-            <a class=" btn btn-info mb-4" href="{{ url_for('main.current_orders', page=page_num) }}">{{ page_num }}</a>
-          {% else %}
-            <a class="btn btn-outline-info mb-4" href="{{ url_for('main.current_orders', page=page_num) }}">{{ page_num }}</a>
-          {% endif %}
-        {% else %}
-        {% endif%}
-      {% endfor %}
-    {% elif base_func == 'pin_orders'%}
-      {% for page_num in orders.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-        {% if page_num %}
-          {% if orders.page == page_num %}
-            <a class=" btn btn-info mb-4" href="{{ url_for('main.pin_orders', pin=orders.items[0].cust_pincode, page=page_num) }}">{{ page_num }}</a>
-          {% else %}
-            <a class="btn btn-outline-info mb-4" href="{{ url_for('main.pin_orders', pin=orders.items[0].cust_pincode, page=page_num) }}">{{ page_num }}</a>
-          {% endif %}
-        {% else %}
-        {% endif%}
-      {% endfor %}
-    {% endif %}
-  </div>
+  {% endif %}
+  {% else %}
+  {% endif%}
+  {% endfor %}
+  {% elif base_func == 'current_orders'%}
+  {% for page_num in orders.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+  {% if page_num %}
+  {% if orders.page == page_num %}
+  <a class=" btn btn-info mb-4" href="{{ url_for('main.current_orders', page=page_num) }}">{{ page_num }}</a>
+  {% else %}
+  <a class="btn btn-outline-info mb-4" href="{{ url_for('main.current_orders', page=page_num) }}">{{ page_num }}</a>
+  {% endif %}
+  {% else %}
+  {% endif%}
+  {% endfor %}
+  {% elif base_func == 'pin_orders'%}
+  {% for page_num in orders.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+  {% if page_num %}
+  {% if orders.page == page_num %}
+  <a class=" btn btn-info mb-4"
+    href="{{ url_for('main.pin_orders', pin=orders.items[0].cust_pincode, page=page_num) }}">{{ page_num }}</a>
+  {% else %}
+  <a class="btn btn-outline-info mb-4"
+    href="{{ url_for('main.pin_orders', pin=orders.items[0].cust_pincode, page=page_num) }}">{{ page_num }}</a>
+  {% endif %}
+  {% else %}
+  {% endif%}
+  {% endfor %}
+  {% endif %}
+</div>
 {% endblock content %}
