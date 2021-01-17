@@ -9,6 +9,7 @@ from urllib.parse import quote
 from sqlalchemy import func
 import time
 from datetime import datetime, timedelta
+from flask import jsonify
 
 from pytz import timezone
 import pytz
@@ -83,7 +84,9 @@ def pin_orders(pin):
     page = request.args.get('page', 1 , type=int)
     orders = db.session.query(Order).filter(Order.user_id == None, Order.status != OrderStatus.delivered, Order.cust_pincode == pin).order_by(Order.id).paginate(page=page, per_page=8)
     title = "Orders in " + pin
-    return render_template('orders_list.html', orders=orders, title=title, base_func='pin_orders', delivery_status= OrderStatus.delivered)
+    agent_role = Role.query.filter_by(name='Agent').first()
+    agents = db.session.query(User).filter(User.roles.contains(agent_role))
+    return render_template('orders_list.html', orders=orders, title=title, base_func='pin_orders', delivery_status= OrderStatus.delivered, agents=agents)
 
 @main.route("/order/<int:order_id>", methods=['GET'])
 @roles_required('Admin')
@@ -161,6 +164,38 @@ def assign_order(order_id, user_id):
         flash('Order assigned successfully!', 'success')
     db.session.commit()
     return redirect(url_for('main.unassigned_orders'))
+
+@main.route("/assign_multiple_orders", methods=['POST'])
+@roles_required('Admin')
+@login_required
+def assign_multiple_orders():
+    if request.method == 'POST':
+        args = request.get_json()
+        order_ids = args['orderId']
+        agent_id = args['agentId']
+        orders = Order.query.filter(Order.id.in_(order_ids)).all()
+        for order in orders:
+            order.user_id = agent_id
+        db.session.commit()
+        flash('Orders assigned successfully!', 'success')
+        print("redirecting")
+        return jsonify(dict(redirect='/unassigned_orders'))
+
+@main.route("/delete_multiple_orders", methods=['POST'])
+@roles_required('Admin')
+@login_required
+def delete_multiple_orders():
+    if request.method == 'POST':
+        args = request.get_json()
+        order_ids = args['orderId']
+        orders = Order.query.filter(Order.id.in_(order_ids)).all()
+        for order in orders:
+            db.session.delete(order)
+            print("Deleting")
+        db.session.commit()
+        flash('Orders deleted successfully!', 'success')
+        print("redirecting")
+        return jsonify(dict(redirect='/unassigned_orders'))
 
 @main.route("/da_update_status/<int:agent_id>")
 @login_required
@@ -246,7 +281,7 @@ def update_existing_order(order, form):
     order.phone = form.phone.data
     order.cust_addr1 = form.cust_addr1.data
     order.cust_addr2 = form.cust_addr2.data
-    order.cust_pincode = form.cust_pincode.data
+    order.cust_pincode = form.cust_pincode.data.strip()
     order.delivery_instructions = form.delivery_instructions.data
     order.user_tip = form.user_tip.data
     order.drinks = form.drinks.data
